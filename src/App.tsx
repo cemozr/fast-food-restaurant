@@ -11,19 +11,17 @@ import bgImage from "./assets/hero-bg.jpg";
 function App() {
   return (
     <>
-      <div>
-        <img className="absolute -z-10" src={bgImage} alt="" />
+      <div className="fixed left-0 top-0 z-[-1] h-full w-full">
+        <img className="h-full w-full object-cover" src={bgImage} alt="" />
       </div>
       <BrowserRouter>
         <Header />
-
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/about" element={<About />} />
           <Route path="/booking" element={<Booking />} />
         </Routes>
-
         <Footer />
       </BrowserRouter>
     </>

@@ -1,38 +1,26 @@
-import { Link } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
-import { FaShoppingCart } from "react-icons/fa";
-import Button from "./UI/Button";
+import { useState } from "react";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { ImCross } from "react-icons/im";
+import NavLinks from "./UI/NavLinks";
+
 export default function Header() {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
-    <div className="mx-48 flex items-center justify-around py-4">
-      <span className="text-txtLight font-dancing text-3xl font-light">
-        Feane
-      </span>
-      <ul className="text-txtLight flex gap-8 text-sm font-medium">
-        <li className="hover:text-secondary">
-          <Link to="/">ANASAYFA</Link>
-        </li>
-        <li className="hover:text-secondary">
-          <Link to="/menu">MENÜ</Link>
-        </li>
-        <li className="hover:text-secondary">
-          <Link to="/about">HAKKIMIZDA</Link>
-        </li>
-        <li className="hover:text-secondary">
-          <Link to="/booking">REZERVASYON</Link>
-        </li>
-      </ul>
-      <div className="flex gap-4">
-        <button>
-          <FaUser color="white" className="hover:fill-secondary" />
+    <nav className="flex flex-col px-4 py-4 lg:mx-32 lg:flex-row lg:justify-around">
+      <div className="flex items-center justify-between">
+        <span className="w-40 cursor-pointer font-dancing text-3xl font-light text-txtLight">
+          Lezzet Lab
+        </span>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-2xl text-txtLight lg:hidden"
+        >
+          {isOpen ? <ImCross /> : <GiHamburgerMenu />}
         </button>
-        <button>
-          <FaShoppingCart color="white" className="hover:fill-secondary" />
-        </button>
-        <Button el="link" to="/menu">
-          Online Sipariş
-        </Button>
       </div>
-    </div>
+      <NavLinks isOpen={isOpen} setIsOpen={setIsOpen} />
+      {isOpen && <NavLinks setIsOpen={setIsOpen} />}
+    </nav>
   );
 }
