@@ -1,18 +1,23 @@
 import Button from "../UI/Button";
-import FoodCard from "../UI/FoodCard";
+import FoodCard from "../FoodCard";
+import foodData from "../../data/foodData";
 
 export default function Menu() {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center bg-bg">
-      <h1 className="font-dancing text-5xl text-txtDark">Menümüz</h1>
-      <div>
-        <Button el="button-category">All</Button>
+    <div className="flex flex-col items-center justify-center gap-2 bg-bg p-10">
+      <h1 className="p-2 font-dancing text-5xl text-txtDark">Menümüz</h1>
+      <div className="grid grid-cols-3 md:flex">
+        <Button el="button-category">Hepsi</Button>
         <Button el="button-category">Burger</Button>
         <Button el="button-category">Pizza</Button>
-        <Button el="button-category">Pasta</Button>
-        <Button el="button-category">Fries</Button>
+        <Button el="button-category">Makarna</Button>
+        <Button el="button-category">Kızartma</Button>
       </div>
-      <FoodCard />
+      <div className="grid h-full grid-cols-1 justify-stretch md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {foodData.map((food, i) => {
+          return <FoodCard key={i} food={food} />;
+        })}
+      </div>
     </div>
   );
 }

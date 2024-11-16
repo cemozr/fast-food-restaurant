@@ -1,6 +1,6 @@
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Button from "./Button";
+import Button from "./UI/Button";
 
 type NavLinksProps = {
   isOpen?: boolean;

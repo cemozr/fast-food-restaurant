@@ -10,7 +10,7 @@ import bgImage from "./assets/hero-bg.jpg";
 
 function App() {
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <div className="fixed left-0 top-0 z-[-1] h-full w-full">
         <img className="h-full w-full object-cover" src={bgImage} alt="" />
       </div>
@@ -24,7 +24,7 @@ function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
-    </>
+    </div>
   );
 }
 

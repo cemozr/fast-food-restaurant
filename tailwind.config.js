@@ -15,6 +15,7 @@ export default {
       bgDark: "#F1F2F3",
       txtLight: "#FFFFFF",
       txtDark: "#0C0C0C",
+      error: "#f1512e",
     },
   },
   plugins: [],
