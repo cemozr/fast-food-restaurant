@@ -23,7 +23,7 @@ export default function BookingForm({ setIsSubmitted }: BookingFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
   } = useForm<Form>({
     resolver: zodResolver(formSchema),
   });
@@ -31,9 +31,6 @@ export default function BookingForm({ setIsSubmitted }: BookingFormProps) {
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    if (!isSubmitSuccessful) {
-      alert("Bir şeyler yanlış gitti lütfen daha sonra tekrar deneyiniz.");
-    }
     setIsSubmitted(true);
     setTimeout(() => {
       navigate("/");
