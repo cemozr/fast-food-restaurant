@@ -1,9 +1,12 @@
 Design and images provided from [html Design](https://html.design/download/feane-fast-food-html-template/)
 <br/>
+<br/>
 License : Creative Commons 3.0 – Free to
 use for personal and commercial use
 <br/>
+<br/>
 This project is still under development.
+<br/>
 <br/>
 Planned features:
 <br/>
