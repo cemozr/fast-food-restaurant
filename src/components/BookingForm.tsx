@@ -2,6 +2,7 @@ import { z } from "zod";
 import Button from "./UI/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   name: z.string().min(2, "Lütfen geçerli bir isim giriniz."),
@@ -15,17 +16,29 @@ const formSchema = z.object({
 });
 
 type Form = z.infer<typeof formSchema>;
-
-export default function BookingForm() {
+type BookingFormProps = {
+  setIsSubmitted: (isSubmitted: boolean) => void;
+};
+export default function BookingForm({ setIsSubmitted }: BookingFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
   } = useForm<Form>({
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit: SubmitHandler<Form> = (data) => {
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<Form> = async (data) => {
+    if (!isSubmitSuccessful) {
+      alert("Bir şeyler yanlış gitti lütfen daha sonra tekrar deneyiniz.");
+    }
+    setIsSubmitted(true);
+    setTimeout(() => {
+      navigate("/");
+    }, 2000);
+
     console.log(data);
   };
 

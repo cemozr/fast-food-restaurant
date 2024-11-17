@@ -30,9 +30,15 @@ export default function Footer() {
           seferinde farklı bir deneyime davet ediyoruz. 🍕🍔🍝
         </p>
         <span className="flex justify-center gap-5">
-          <FaFacebook className="text-2xl" />{" "}
-          <FaSquareXTwitter className="text-2xl" />{" "}
-          <FaInstagramSquare className="text-2xl" />
+          <a href="https://www.facebook.com/?locale=tr_TR">
+            <FaFacebook className="text-2xl hover:text-xl hover:text-secondary" />
+          </a>
+          <a href="https://x.com/home?lang=tr">
+            <FaSquareXTwitter className="text-2xl hover:text-xl hover:text-secondary" />
+          </a>
+          <a href="https://www.instagram.com/">
+            <FaInstagramSquare className="text-2xl hover:text-xl hover:text-secondary" />
+          </a>
         </span>
       </div>
       <div className="flex flex-col items-center gap-2 lg:w-1/3">

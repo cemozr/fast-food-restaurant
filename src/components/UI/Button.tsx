@@ -29,7 +29,7 @@ export default function Button(
   if (props.el === "link") {
     return (
       <Link
-        className="w-40 rounded-full bg-secondary px-7 py-2 text-txtLight hover:bg-secondaryDark"
+        className="w-40 rounded-full bg-secondary px-7 py-2 font-semibold text-txtLight hover:bg-secondaryDark"
         to={props.to}
       >
         {props.children}
@@ -56,7 +56,7 @@ export default function Button(
   }
   return (
     <button
-      className="w-40 rounded-full bg-secondary px-7 py-2 text-txtLight hover:bg-secondaryDark"
+      className="w-40 rounded-full bg-secondary px-7 py-2 font-semibold text-txtLight hover:bg-secondaryDark"
       {...props}
     ></button>
   );

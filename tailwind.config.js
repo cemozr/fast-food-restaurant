@@ -16,6 +16,7 @@ export default {
       txtLight: "#FFFFFF",
       txtDark: "#0C0C0C",
       error: "#f1512e",
+      success: "#4BB543",
     },
   },
   plugins: [],

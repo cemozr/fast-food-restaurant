@@ -17,6 +17,7 @@ const links: { to: string; value: string }[] = [
 export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
   return (
     <div
+      id="nav-links"
       className={`${!isOpen ? "hidden" : "flex"} flex-col items-center gap-5 py-5 lg:flex lg:w-full lg:flex-row lg:justify-around`}
     >
       <ul className="flex flex-col items-center justify-center gap-8 text-sm font-medium text-txtLight lg:flex-row">
