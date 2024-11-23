@@ -7,8 +7,14 @@ import Booking from "./components/pages/Booking";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import bgImage from "./assets/hero-bg.jpg";
+import Cart from "./components/Cart";
+import { useSelector } from "react-redux";
+import { RootState } from "./states/store";
 
 function App() {
+  const isCartActive = useSelector((state: RootState) => {
+    return state.cartReducer.isCartActive;
+  });
   return (
     <div className="flex min-h-screen flex-col">
       <div className="fixed left-0 top-0 z-[-1] h-full w-full">
@@ -22,6 +28,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/booking" element={<Booking />} />
         </Routes>
+        {isCartActive && <Cart />}
         <Footer />
       </BrowserRouter>
     </div>

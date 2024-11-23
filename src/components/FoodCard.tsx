@@ -1,11 +1,14 @@
+import { useDispatch } from "react-redux";
 import { type Food } from "../data/foodData";
 import Button from "./UI/Button";
+import { addToCart } from "../states/cartSlice";
 
 type FoodCardProps = {
   food: Food;
 };
 
 export default function FoodCard({ food }: FoodCardProps) {
+  const dispatch = useDispatch();
   return (
     <div className="p-4 text-txtLight">
       <div className="relative top-5 z-20 flex h-48 justify-center rounded-bl-3xl rounded-tl-2xl rounded-tr-2xl bg-bgDark">
@@ -16,7 +19,20 @@ export default function FoodCard({ food }: FoodCardProps) {
         <p>{food.description}</p>
         <div className="flex items-center justify-between">
           <span className="text-lg">{food.price}₺</span>
-          <Button el="button-add-cart" />
+          <Button
+            el="button-add-cart"
+            onClick={() =>
+              dispatch(
+                addToCart({
+                  id: food.id,
+                  name: food.name,
+                  image: food.image,
+                  price: food.price,
+                  count: 1,
+                }),
+              )
+            }
+          />
         </div>
       </div>
     </div>

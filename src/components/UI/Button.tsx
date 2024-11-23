@@ -18,13 +18,17 @@ type ButtonCategoryProps = {
 type ButtonAddCartProps = {
   el: "button-add-cart";
 } & ComponentPropsWithoutRef<"button">;
+type ButtonWithIconProps = {
+  el: "button-with-icon";
+} & ComponentPropsWithoutRef<"button">;
 
 export default function Button(
   props:
     | ButtonProps
     | LinkButtonProps
     | ButtonCategoryProps
-    | ButtonAddCartProps,
+    | ButtonAddCartProps
+    | ButtonWithIconProps,
 ) {
   if (props.el === "link") {
     return (
@@ -53,6 +57,9 @@ export default function Button(
         <FaCartShopping className="text-lg" />
       </button>
     );
+  }
+  if (props.el === "button-with-icon") {
+    return <button {...props}></button>;
   }
   return (
     <button

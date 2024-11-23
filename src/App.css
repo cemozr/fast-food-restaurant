@@ -10,12 +10,22 @@
 #nav-links {
   animation: translate 0.5s;
 }
-
+#cart {
+  animation: translate-side 0.5s;
+}
 @keyframes translate {
   0% {
     transform: translateY(-100%);
   }
   100% {
     transform: translateY((0%));
+  }
+}
+@keyframes translate-side {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
   }
 }
