@@ -11,9 +11,9 @@ This project is still under development.
 Planned features:
 <br/>
 
-- Category filtering
+- ~~Category filtering~~
   <br/>
-- Shopping cart
+- ~~Shopping cart~~
   <br/>
 - User registration and auth
   <br/>
