@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Button from "./UI/Button";
 import { setIsCartActive } from "../states/cartSlice";
 import { useDispatch } from "react-redux";
-import { useEffect, useRef } from "react";
 
 type NavLinksProps = {
   isOpen?: boolean;
