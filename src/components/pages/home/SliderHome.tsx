@@ -1,8 +1,8 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Button from "./UI/Button";
-import sliderHomeData from "../data/sliderHomeData.json";
+import Button from "../../UI/Button";
+import sliderHomeData from "../../../data/sliderHomeData.json";
 
 export default function SliderHome() {
   var settings = {

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import BookingForm from "../BookingForm";
-import Location from "../Location";
-import SuccessAlert from "../UI/SuccessAlert";
+import BookingForm from "./BookingForm";
+import Location from "./Location";
+import SuccessAlert from "../../UI/SuccessAlert";
 
 export default function Booking() {
   const [isSubmitted, setIsSubmitted] = useState(false);

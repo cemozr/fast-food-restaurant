@@ -1,10 +1,10 @@
-import Button from "../UI/Button";
-import FoodCard from "../FoodCard";
-import foodData from "../../data/foodData";
+import Button from "../../UI/Button";
+import FoodCard from "./FoodCard";
+import foodData from "../../../data/foodData";
 import { useDispatch, useSelector } from "react-redux";
-import { filter } from "../../states/categorySlice";
-import { RootState } from "../../states/store";
-import { setIsCartActive } from "../../states/cartSlice";
+import { filter } from "../../../states/categorySlice";
+import { RootState } from "../../../states/store";
+import { setIsCartActive } from "../../../states/cartSlice";
 
 export default function Menu() {
   const dispatch = useDispatch();

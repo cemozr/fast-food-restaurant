@@ -1,7 +1,7 @@
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Button from "./UI/Button";
-import { setIsCartActive } from "../states/cartSlice";
+import Button from "../UI/Button";
+import { setIsCartActive } from "../../states/cartSlice";
 import { useDispatch } from "react-redux";
 
 type NavLinksProps = {
@@ -36,7 +36,7 @@ export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
         })}
       </ul>
       <div className="flex justify-center gap-4">
-        <Button el="button-with-icon">
+        <Button el="link-with-icon" to="/auth" onClick={() => setIsOpen(false)}>
           <FaUser color="white" className="hover:fill-secondary" />
         </Button>
         <Button
@@ -48,7 +48,7 @@ export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
         >
           <FaShoppingCart color="white" className="hover:fill-secondary" />
         </Button>
-        <Button el="link" to="/menu">
+        <Button el="link" to="/menu" onClick={() => setIsOpen(false)}>
           Online Sipariş
         </Button>
       </div>

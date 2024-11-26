@@ -1,19 +1,9 @@
 import { z } from "zod";
-import Button from "./UI/Button";
+import Button from "../../UI/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-
-const formSchema = z.object({
-  name: z.string().min(2, "Lütfen geçerli bir isim giriniz."),
-  tel: z.string().min(10, "Lütfen geçerli bir telefon numarası giriniz."),
-  email: z.string().email("Lütfen geçerli bir e-posta adresi giriniz."),
-  count: z.string().min(1, "Bu alan boş bırakılamaz."),
-  date: z
-    .string()
-    .min(8, "Lütfen geçerli bir tarih giriniz.")
-    .max(10, "Lütfen geçerli bir tarih giriniz."),
-});
+import formSchema from "./formSchema";
 
 type Form = z.infer<typeof formSchema>;
 type BookingFormProps = {

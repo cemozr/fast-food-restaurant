@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
-import { type Food } from "../data/foodData";
-import Button from "./UI/Button";
-import { addToCart } from "../states/cartSlice";
+import { type Food } from "../../../data/foodData";
+import Button from "../../UI/Button";
+import { addToCart } from "../../../states/cartSlice";
 
 type FoodCardProps = {
   food: Food;

@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import Button from "./UI/Button";
+import Button from "../UI/Button";
 import { ImCross } from "react-icons/im";
-import { calculateTotal, setIsCartActive } from "../states/cartSlice";
+import { calculateTotal, setIsCartActive } from "../../states/cartSlice";
 import CartItem from "./CartItem";
-import { RootState } from "../states/store";
+import { RootState } from "../../states/store";
 import { useEffect } from "react";
 export default function Cart() {
   const dispatch = useDispatch();
