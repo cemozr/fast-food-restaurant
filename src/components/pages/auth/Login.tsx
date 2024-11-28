@@ -5,13 +5,20 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CiLogin } from "react-icons/ci";
 import { useDispatch } from "react-redux";
-import { setIsRegistered } from "../../../states/authSlice";
+import {
+  setIsLoggedIn,
+  setIsRegistered,
+  setUser,
+} from "../../../states/authSlice";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,47 +27,68 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginForm> = () => {};
+  const onSubmit: SubmitHandler<LoginForm> = async (formData) => {
+    try {
+      const userData = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password,
+      );
+
+      const user = userData.user;
+
+      dispatch(
+        setUser({
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+        }),
+        setIsLoggedIn(true),
+      );
+
+      navigate(`/user/${user.uid}`);
+    } catch (error) {
+      console.error("Kayıt Başarısız", error);
+    }
+  };
 
   return (
-    <div className="my-20 flex flex-grow items-center justify-center p-10">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center gap-4 rounded-md bg-primary bg-opacity-70 px-6 py-10 text-primary"
-      >
-        <h1 className="flex items-center font-dancing text-4xl text-txtLight">
-          Giriş <CiLogin className="ml-2" />
-        </h1>
-        <input
-          type="text"
-          placeholder="E-posta"
-          className="h-10 rounded-sm p-3"
-          {...register("email")}
-        />
-        {errors.email && <p className="text-error">{errors.email.message}</p>}
-        <input
-          type="password"
-          placeholder="Şifre"
-          className="h-10 rounded-sm p-3"
-          {...register("password")}
-        />
-        {errors.password && (
-          <p className="text-error">{errors.password.message}</p>
-        )}
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="my-10 flex flex-col items-center gap-4 px-6 py-10 text-primary lg:rounded-md lg:bg-primary lg:bg-opacity-70"
+    >
+      <h1 className="flex items-center font-dancing text-4xl text-txtLight">
+        Giriş <CiLogin className="ml-2" />
+      </h1>
+      <input
+        type="text"
+        placeholder="E-posta"
+        className="h-10 rounded-sm p-3"
+        {...register("email")}
+      />
+      {errors.email && <p className="text-error">{errors.email.message}</p>}
+      <input
+        type="password"
+        placeholder="Şifre"
+        className="h-10 rounded-sm p-3"
+        {...register("password")}
+      />
+      {errors.password && (
+        <p className="text-error">{errors.password.message}</p>
+      )}
 
-        <p className="text-txtLight">
-          Hesabın yok mu?{" "}
-          <span
-            onClick={() => dispatch(setIsRegistered())}
-            className="text-secondary underline"
-          >
-            Kayıt Ol
-          </span>
-        </p>
-        <Button el="button" type="submit">
-          Giriş Yap
-        </Button>
-      </form>
-    </div>
+      <p className="text-txtLight">
+        Hesabın yok mu?{" "}
+        <span
+          onClick={() => dispatch(setIsRegistered())}
+          className="text-secondary underline hover:cursor-pointer hover:text-secondaryDark"
+        >
+          Kayıt Ol
+        </span>
+      </p>
+      <Button el="button" type="submit">
+        Giriş Yap
+      </Button>
+    </form>
   );
 }

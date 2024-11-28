@@ -1,35 +1,45 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  loadFromLocalStorage,
+  saveToLocalStorage,
+} from "../utils/localStorage";
 
-type User = {
-  name: string;
-  email: string;
-  password: string;
+export type User = {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
 };
 
 type InitialState = {
-  userList: User[];
+  user: User | null;
   isRegistered: boolean;
-  isLoginSuccess: boolean | null;
+  isLoggedIn: boolean;
 };
 
 const initialState: InitialState = {
-  userList: [],
+  user: loadFromLocalStorage("user") || null,
   isRegistered: false,
-  isLoginSuccess: null,
+  isLoggedIn: !!loadFromLocalStorage("user"),
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    register: () => {},
-    login: () => {},
     setIsRegistered: (state) => {
       state.isRegistered = !state.isRegistered;
+    },
+    setUser: (state, action: PayloadAction<User | null>) => {
+      state.user = action.payload;
+      state.isLoggedIn = action.payload !== null;
+      saveToLocalStorage("user", action.payload);
+    },
+    setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
+      state.isLoggedIn = action.payload;
     },
   },
 });
 
 export default authSlice.reducer;
 
-export const { register, login, setIsRegistered } = authSlice.actions;
+export const { setIsRegistered, setUser, setIsLoggedIn } = authSlice.actions;

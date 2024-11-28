@@ -2,7 +2,8 @@ import { FaUser, FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "../UI/Button";
 import { setIsCartActive } from "../../states/cartSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../states/store";
 
 type NavLinksProps = {
   isOpen?: boolean;
@@ -18,7 +19,10 @@ const links: { to: string; value: string }[] = [
 
 export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
   const dispatch = useDispatch();
-
+  const isLoggedIn = useSelector(
+    (state: RootState) => state.authReducer.isLoggedIn,
+  );
+  const user = useSelector((state: RootState) => state.authReducer.user);
   return (
     <div
       id="nav-links"
@@ -36,7 +40,11 @@ export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
         })}
       </ul>
       <div className="flex justify-center gap-4">
-        <Button el="link-with-icon" to="/auth" onClick={() => setIsOpen(false)}>
+        <Button
+          el="link-with-icon"
+          to={isLoggedIn ? `/user/${user?.uid}` : "/auth"}
+          onClick={() => setIsOpen(false)}
+        >
           <FaUser color="white" className="hover:fill-secondary" />
         </Button>
         <Button

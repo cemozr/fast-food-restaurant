@@ -8,16 +8,40 @@ import Header from "./components/navbar/Header";
 import Footer from "./components/Footer";
 import bgImage from "./assets/hero-bg.jpg";
 import Cart from "./components/cart/Cart";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./states/store";
 import Auth from "./components/pages/auth/Auth";
 import AdminDashboard from "./components/pages/dashboards/admin/AdminDashboard";
 import UserDashBoard from "./components/pages/dashboards/user/UserDashboard";
+import ProtectedRoute from "./ProtectedRoute";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./config/firebase";
+import { setUser, User } from "./states/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
   const isCartActive = useSelector((state: RootState) => {
     return state.cartReducer.isCartActive;
   });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+      if (user) {
+        dispatch(
+          setUser({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+          }),
+        );
+      } else {
+        dispatch(setUser(null));
+      }
+    });
+    return () => unsubscribe();
+  }, [dispatch]);
+
   return (
     <div className="flex min-h-screen flex-col">
       <div className="fixed left-0 top-0 z-[-1] h-full w-full">
@@ -32,7 +56,14 @@ function App() {
           <Route path="/booking" element={<Booking />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/user" element={<UserDashBoard />} />
+          <Route
+            path="/user/:uid"
+            element={
+              <ProtectedRoute>
+                <UserDashBoard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
         {isCartActive && <Cart />}
         <Footer />
