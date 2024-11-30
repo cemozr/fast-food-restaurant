@@ -148,7 +148,7 @@ export default function Register() {
           onClick={() => dispatch(setIsRegistered())}
           className="text-secondary underline hover:cursor-pointer hover:text-secondaryDark"
         >
-          Giriş Yap!
+          Giriş yap!
         </span>
       </p>
       <Button el="button" type="submit">

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CiLogin } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
+import { FaRegSadCry } from "react-icons/fa";
 import {
   setisLoading,
   setIsLoggedIn,
@@ -115,9 +116,17 @@ export default function Login() {
             onClick={() => dispatch(setIsRegistered())}
             className="text-secondary underline hover:cursor-pointer hover:text-secondaryDark"
           >
-            Kayıt Ol
+            Kayıt ol
           </span>
         </p>
+
+        <span
+          onClick={() => navigate("/forgot-password")}
+          className="flex items-center gap-1 text-secondary underline hover:cursor-pointer hover:text-secondaryDark"
+        >
+          Şifremi unuttum <FaRegSadCry />
+        </span>
+
         <Button el="button" type="submit">
           Giriş Yap
         </Button>

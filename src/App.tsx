@@ -14,6 +14,8 @@ import Auth from "./components/pages/auth/Auth";
 import AdminDashboard from "./components/pages/dashboards/admin/AdminDashboard";
 import UserDashBoard from "./components/pages/dashboards/user/UserDashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import ForgotPassword from "./components/pages/forgotPassword/ForgotPassword";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const isCartActive = useSelector((state: RootState) => {
@@ -28,6 +30,18 @@ function App() {
       <div className="fixed left-0 top-0 z-[-1] h-full w-full">
         <img className="h-full w-full object-cover" src={bgImage} alt="" />
       </div>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <BrowserRouter>
         <Header />
         <Routes>
@@ -45,6 +59,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
         {isCartActive && <Cart />}
         <Footer />
