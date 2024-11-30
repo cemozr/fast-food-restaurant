@@ -1,3 +1,3 @@
 export default function AdminDashboard() {
-  return <div>ADMIN</div>;
+  return <div className="text-txtLight">ADMIN</div>;
 }

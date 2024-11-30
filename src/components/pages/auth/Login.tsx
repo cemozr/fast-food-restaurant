@@ -4,21 +4,33 @@ import { loginSchema } from "./authSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CiLogin } from "react-icons/ci";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  setisLoading,
   setIsLoggedIn,
   setIsRegistered,
   setUser,
 } from "../../../states/authSlice";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  browserSessionPersistence,
+  setPersistence,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../../../config/firebase";
 import { useNavigate } from "react-router-dom";
+import { AppDispatch, RootState } from "../../../states/store";
+import Loading from "../../UI/Loading";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+  const authStates = useSelector((state: RootState) => {
+    return state.authReducer;
+  });
   const {
     register,
     handleSubmit,
@@ -29,6 +41,8 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<LoginForm> = async (formData) => {
     try {
+      dispatch(setisLoading(true));
+      setPersistence(auth, browserSessionPersistence);
       const userData = await signInWithEmailAndPassword(
         auth,
         formData.email,
@@ -48,47 +62,66 @@ export default function Login() {
 
       navigate(`/user/${user.uid}`);
     } catch (error) {
-      console.error("Kayıt Başarısız", error);
+      toast.error(
+        "Giriş başarısız. Bilgilerinizi kontrol edip tekrar deneyiniz.",
+        {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        },
+      );
+      console.error("Giriş Başarısız.", error);
+      dispatch(setisLoading(false));
     }
   };
 
-  return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="my-10 flex flex-col items-center gap-4 px-6 py-10 text-primary lg:rounded-md lg:bg-primary lg:bg-opacity-70"
-    >
-      <h1 className="flex items-center font-dancing text-4xl text-txtLight">
-        Giriş <CiLogin className="ml-2" />
-      </h1>
-      <input
-        type="text"
-        placeholder="E-posta"
-        className="h-10 rounded-sm p-3"
-        {...register("email")}
-      />
-      {errors.email && <p className="text-error">{errors.email.message}</p>}
-      <input
-        type="password"
-        placeholder="Şifre"
-        className="h-10 rounded-sm p-3"
-        {...register("password")}
-      />
-      {errors.password && (
-        <p className="text-error">{errors.password.message}</p>
-      )}
+  authStates.isLoggedIn && dispatch(setisLoading(false));
+  return authStates.isLoading ? (
+    <Loading />
+  ) : (
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="my-10 flex flex-col items-center gap-4 px-6 py-10 text-primary lg:rounded-md lg:bg-primary lg:bg-opacity-70"
+      >
+        <h1 className="flex items-center font-dancing text-4xl text-txtLight">
+          Giriş <CiLogin className="ml-2" />
+        </h1>
+        <input
+          type="text"
+          placeholder="E-posta"
+          className="h-10 rounded-sm p-3"
+          {...register("email")}
+        />
+        {errors.email && <p className="text-error">{errors.email.message}</p>}
+        <input
+          type="password"
+          placeholder="Şifre"
+          className="h-10 rounded-sm p-3"
+          {...register("password")}
+        />
+        {errors.password && (
+          <p className="text-error">{errors.password.message}</p>
+        )}
 
-      <p className="text-txtLight">
-        Hesabın yok mu?{" "}
-        <span
-          onClick={() => dispatch(setIsRegistered())}
-          className="text-secondary underline hover:cursor-pointer hover:text-secondaryDark"
-        >
-          Kayıt Ol
-        </span>
-      </p>
-      <Button el="button" type="submit">
-        Giriş Yap
-      </Button>
-    </form>
+        <p className="text-txtLight">
+          Hesabın yok mu?{" "}
+          <span
+            onClick={() => dispatch(setIsRegistered())}
+            className="text-secondary underline hover:cursor-pointer hover:text-secondaryDark"
+          >
+            Kayıt Ol
+          </span>
+        </p>
+        <Button el="button" type="submit">
+          Giriş Yap
+        </Button>
+      </form>
+    </>
   );
 }

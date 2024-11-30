@@ -7,7 +7,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <nav className="flex flex-col px-4 py-4 lg:mx-32 lg:flex-row">
+    <nav className="flex flex-col px-4 py-4 lg:mx-auto lg:flex-row">
       <div className="flex items-center justify-between">
         <span className="w-40 cursor-pointer font-dancing text-3xl font-light text-txtLight">
           Lezzet Lab

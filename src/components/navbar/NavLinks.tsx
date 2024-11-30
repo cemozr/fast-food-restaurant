@@ -39,13 +39,20 @@ export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
           );
         })}
       </ul>
-      <div className="flex justify-center gap-4">
+      <div className="my-1 h-px w-1/2 bg-bg lg:hidden"></div>
+      <div className="flex flex-wrap justify-center gap-4 lg:flex-none">
         <Button
           el="link-with-icon"
           to={isLoggedIn ? `/user/${user?.uid}` : "/auth"}
           onClick={() => setIsOpen(false)}
         >
-          <FaUser color="white" className="hover:fill-secondary" />
+          {isLoggedIn ? (
+            <p className="text-txtLight underline">
+              Hoş geldin {user?.displayName}
+            </p>
+          ) : (
+            <FaUser color="white" className="hover:fill-secondary" />
+          )}
         </Button>
         <Button
           el="button-with-icon"

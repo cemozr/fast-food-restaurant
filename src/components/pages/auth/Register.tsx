@@ -4,8 +4,9 @@ import { registerSchema } from "./authSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaUser } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  setisLoading,
   setIsLoggedIn,
   setIsRegistered,
   setUser,
@@ -13,12 +14,19 @@ import {
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../../config/firebase";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../../../states/store";
+import Loading from "../../UI/Loading";
+import { toast } from "react-toastify";
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export default function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const authStates = useSelector((state: RootState) => {
+    return state.authReducer;
+  });
+
   const {
     register,
     handleSubmit,
@@ -27,6 +35,7 @@ export default function Register() {
 
   const onSubmit: SubmitHandler<RegisterForm> = async (formData) => {
     try {
+      dispatch(setisLoading(true));
       const userData = await createUserWithEmailAndPassword(
         auth,
         formData.email,
@@ -47,10 +56,43 @@ export default function Register() {
       navigate(`/user/${user.uid}`);
       dispatch(setIsLoggedIn(true));
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Bilinmeyen hata";
+
+      errorMessage === "Firebase: Error (auth/email-already-in-use)."
+        ? toast.error("Kayıt başarısız. Bu e-posta adresi zaten kayıtlı", {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          })
+        : toast.error(
+            "Kayıt başarısız. Bilgilerinizi kontrol edip tekrar deneyiniz.",
+            {
+              position: "bottom-left",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            },
+          );
+
       console.error("Kayıt Başarısız", error);
+
+      dispatch(setisLoading(false));
     }
   };
-  return (
+  authStates.isLoggedIn && dispatch(setisLoading(false));
+  return authStates.isLoading ? (
+    <Loading />
+  ) : (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col items-center gap-4 py-10 text-primary lg:my-10 lg:rounded-md lg:bg-primary lg:bg-opacity-70"

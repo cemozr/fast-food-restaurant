@@ -14,12 +14,16 @@ type InitialState = {
   user: User | null;
   isRegistered: boolean;
   isLoggedIn: boolean;
+  isLoading: boolean | null;
+  role: string | null;
 };
 
 const initialState: InitialState = {
   user: loadFromLocalStorage("user") || null,
   isRegistered: false,
   isLoggedIn: !!loadFromLocalStorage("user"),
+  isLoading: null,
+  role: null,
 };
 
 const authSlice = createSlice({
@@ -37,9 +41,21 @@ const authSlice = createSlice({
     setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
       state.isLoggedIn = action.payload;
     },
+    setisLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    setRole: (state, action: PayloadAction<string | null>) => {
+      state.role = action.payload;
+    },
   },
 });
 
 export default authSlice.reducer;
 
-export const { setIsRegistered, setUser, setIsLoggedIn } = authSlice.actions;
+export const {
+  setIsRegistered,
+  setUser,
+  setIsLoggedIn,
+  setisLoading,
+  setRole,
+} = authSlice.actions;
