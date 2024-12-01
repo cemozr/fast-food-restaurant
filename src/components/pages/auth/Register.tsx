@@ -95,7 +95,7 @@ export default function Register() {
   ) : (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col items-center gap-4 py-10 text-primary lg:my-10 lg:rounded-md lg:bg-primary lg:bg-opacity-70"
+      className="flex flex-col items-center gap-4 py-8 text-primary lg:my-10 lg:rounded-md lg:bg-primary lg:bg-opacity-70"
     >
       <h1 className="flex items-center font-dancing text-4xl text-txtLight">
         Kayıt <FaUser color="white" className="ml-3 text-2xl" />

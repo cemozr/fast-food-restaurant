@@ -75,7 +75,7 @@ export default function ForgotPassword() {
         />
         {errors.email && <p className="text-error">{errors.email.message}</p>}
         <p className="flex gap-2 text-txtLight">
-          Kayıt sayfasına{" "}
+          Giriş sayfasına{" "}
           <span
             onClick={() => navigate("/auth")}
             className="flex items-center gap-1 text-secondary underline hover:cursor-pointer hover:text-secondaryDark"

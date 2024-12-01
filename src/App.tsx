@@ -50,7 +50,6 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/admin" element={<AdminDashboard />} />
           <Route
             path="/user/:uid"
             element={

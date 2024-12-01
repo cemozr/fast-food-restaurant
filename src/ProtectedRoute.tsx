@@ -1,11 +1,11 @@
 import { ReactNode, useEffect } from "react";
-import { auth } from "./config/firebase";
+import { auth, db } from "./config/firebase";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./states/store";
 import { setisLoading, setRole, setUser } from "./states/authSlice";
 import Loading from "./components/UI/Loading";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 type ProtectedRouteProps = {
   children: ReactNode;
@@ -14,7 +14,6 @@ type ProtectedRouteProps = {
 export default function ProtectedRoute({
   children,
 }: ProtectedRouteProps): JSX.Element {
-  const db = getFirestore();
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => {
     return state.authReducer;

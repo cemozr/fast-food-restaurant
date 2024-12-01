@@ -78,7 +78,7 @@ export default function Button(
   }
   return (
     <button
-      className="w-40 rounded-full bg-secondary px-7 py-2 font-semibold text-txtLight hover:bg-secondaryDark"
+      className="w-44 rounded-full bg-secondary px-7 py-2 font-semibold text-txtLight hover:bg-secondaryDark"
       {...props}
     ></button>
   );
