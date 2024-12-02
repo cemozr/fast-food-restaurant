@@ -1,7 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../states/store";
+import { useDispatch } from "react-redux";
 import { ReactNode, useState } from "react";
-
 import ProductsDashboard from "./productsDashboard/ProductsDashboard";
 import BookingsDashboard from "./BookingsDashboard";
 import OrdersDashboard from "./OrdersDashBoard";
@@ -12,9 +10,7 @@ import { setIsLoggedIn, setUser } from "../../../../states/authSlice";
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
-  const authStates = useSelector((state: RootState) => {
-    return state.authReducer;
-  });
+
   const [activeMenu, setActiveMenu] = useState<{
     name: string;
     component: ReactNode;
@@ -29,7 +25,7 @@ export default function AdminDashboard() {
     { name: "Siparişleri Yönet", component: <OrdersDashboard /> },
   ];
   return (
-    <div className="flex w-full flex-grow flex-col items-center text-txtLight">
+    <div className="flex flex-grow flex-col items-center text-txtLight">
       <Button
         el="button"
         onClick={() => {
@@ -41,7 +37,7 @@ export default function AdminDashboard() {
       >
         Çıkış Yap
       </Button>
-      <ul className="flex flex-col gap-2 py-2 text-center text-txtLight">
+      <ul className="flex flex-col gap-2 py-2 text-center text-lg font-semibold text-txtLight lg:flex-row lg:gap-6">
         {menus.map((menu, i) => {
           return (
             <li key={i}>
@@ -55,8 +51,8 @@ export default function AdminDashboard() {
           );
         })}
       </ul>
-      <div className="my-2 h-px w-1/2 bg-bg"></div>
-      <div className="flex w-full flex-grow items-center justify-center bg-primary bg-opacity-70 lg:bg-opacity-0 lg:bg-none">
+      <div className="my-2 h-px w-full bg-bg lg:w-full"></div>
+      <div className="flex flex-grow items-center justify-center bg-primary bg-opacity-70 lg:bg-opacity-0 lg:bg-none">
         {activeMenu.component}
       </div>
     </div>

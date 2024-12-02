@@ -45,8 +45,9 @@ export const fetchProducts = createAsyncThunk(
     const docs = await getDocs(collection(db, "products"));
     const products: Product[] = [];
     docs.forEach((doc) => {
-      products.push({ id: doc.id, ...doc.data } as Product);
+      products.push({ id: doc.id, ...doc.data() } as Product);
     });
+    console.log(products);
     return products;
   },
 );
@@ -64,6 +65,7 @@ const productSlice = createSlice({
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.status = "loading";
+        console.log("fetching");
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.products = action.payload;
@@ -71,6 +73,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.rejected, (state) => {
         state.status = "failed";
+        console.log("fetch failed");
       })
       .addCase(addProduct.fulfilled, (state, action) => {
         state.products.push(action.payload);

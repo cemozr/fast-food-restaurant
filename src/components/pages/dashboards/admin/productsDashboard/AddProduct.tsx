@@ -3,12 +3,11 @@ import Button from "../../../../UI/Button";
 import { productSchema } from "./productSchema";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addProduct, uploadImage } from "../../../../../states/productSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../../states/store";
 import { toast } from "react-toastify";
-import { setisLoading } from "../../../../../states/authSlice";
 import Loading from "../../../../UI/Loading";
 
 type ProductForm = z.infer<typeof productSchema>;
@@ -18,7 +17,8 @@ export default function AddProduct() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitSuccessful },
   } = useForm<ProductForm>({
     resolver: zodResolver(productSchema),
   });
@@ -60,16 +60,18 @@ export default function AddProduct() {
         progress: undefined,
         theme: "colored",
       });
-    } finally {
-      console.log("Loading state is being set to false");
-      setisLoading(false);
     }
   };
-
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+      setIsLoading(false);
+    }
+  }, [isSubmitSuccessful]);
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col items-center gap-4 py-8 text-txtDark lg:my-10 lg:rounded-md lg:bg-primary lg:bg-opacity-70"
+      className="flex flex-col items-center gap-4 p-4 text-txtDark lg:rounded-md"
     >
       {isLoading && <Loading />}
       <h1 className="font-dancing text-3xl text-txtLight">Ürün Ekle</h1>

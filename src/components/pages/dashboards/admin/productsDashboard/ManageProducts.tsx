@@ -8,7 +8,7 @@ import { fetchProducts } from "../../../../../states/productSlice";
 import Loading from "../../../../UI/Loading";
 import { toast } from "react-toastify";
 
-export default function ManageProduct() {
+export default function ManageProducts() {
   const dispatch: AppDispatch = useDispatch();
   const productStates = useSelector((state: RootState) => {
     return state.productReducer;
@@ -17,7 +17,6 @@ export default function ManageProduct() {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  if (productStates.status === "loading") return <Loading />;
   if (productStates.status === "failed")
     return toast.error("Ürünler Yüklenemedi", {
       position: "bottom-left",
@@ -29,11 +28,14 @@ export default function ManageProduct() {
       progress: undefined,
       theme: "colored",
     });
-  return (
-    <div className="flex flex-col items-center gap-4 py-8 text-txtLight lg:my-10 lg:rounded-md lg:bg-primary lg:bg-opacity-70">
+
+  return productStates.status === "loading" ? (
+    <Loading />
+  ) : (
+    <div className="flex flex-col items-center gap-4 py-4 text-txtLight lg:my-10 lg:rounded-md">
       <h1 className="font-dancing text-3xl">Ürünleriniz</h1>
 
-      <ul className="grid grid-cols-1 gap-2 p-3 md:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:mx-5 lg:grid-cols-4">
         {productStates.products.map((product) => {
           return (
             <li
