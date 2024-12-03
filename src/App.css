@@ -29,3 +29,7 @@
     transform: translateX(0%);
   }
 }
+html,
+body {
+  overflow-x: hidden;
+}

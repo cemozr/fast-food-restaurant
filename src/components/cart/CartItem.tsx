@@ -1,4 +1,4 @@
-import Button from "./UI/Button";
+import Button from "../UI/Button";
 
 import { FaPlus } from "react-icons/fa";
 import { FaMinus } from "react-icons/fa";
@@ -9,7 +9,7 @@ import {
   increment,
   Order,
   removeFromCart,
-} from "../states/cartSlice";
+} from "../../states/cartSlice";
 import { useDispatch } from "react-redux";
 
 type CartItemProps = {
