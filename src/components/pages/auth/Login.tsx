@@ -61,7 +61,7 @@ export default function Login() {
         setIsLoggedIn(true),
       );
 
-      navigate(`/user/${user.uid}`);
+      navigate(`/user/${user.uid}/dashboard`);
     } catch (error) {
       toast.error(
         "Giriş başarısız. Bilgilerinizi kontrol edip tekrar deneyiniz.",

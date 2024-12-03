@@ -23,8 +23,8 @@ export default function ProductsDashboard() {
     component: <AddProduct />,
   });
   return (
-    <div className="flex flex-col items-center">
-      <ul className="flex w-full py-2 text-center text-lg text-txtLight">
+    <div className="flex w-full flex-col items-center">
+      <ul className="flex w-full py-4 text-center text-lg text-txtLight lg:w-2/3">
         {menus.map((menu, i) => {
           return (
             <li key={i} className="w-1/2">
@@ -39,7 +39,7 @@ export default function ProductsDashboard() {
         })}
       </ul>
       <div className="h-px w-full bg-bg"></div>
-      <div className="flex w-full flex-grow items-center justify-center bg-opacity-0 bg-none lg:bg-primary lg:bg-opacity-70">
+      <div className="flex w-full flex-grow items-center justify-center bg-opacity-0 bg-none lg:rounded-sm lg:bg-primary lg:bg-opacity-70">
         {activeMenu.component}
       </div>
     </div>

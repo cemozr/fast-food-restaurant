@@ -16,6 +16,7 @@ import UserDashBoard from "./components/pages/dashboards/user/UserDashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import ForgotPassword from "./components/pages/forgotPassword/ForgotPassword";
 import { ToastContainer } from "react-toastify";
+import UpdateProduct from "./components/pages/dashboards/admin/productsDashboard/UpdateProduct";
 
 function App() {
   const isCartActive = useSelector((state: RootState) => {
@@ -51,10 +52,18 @@ function App() {
           <Route path="/booking" element={<Booking />} />
           <Route path="/auth" element={<Auth />} />
           <Route
-            path="/user/:uid"
+            path="/user/:uid/dashboard"
             element={
               <ProtectedRoute>
                 {role === "admin" ? <AdminDashboard /> : <UserDashBoard />}
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/:uid/dashboard/update-product"
+            element={
+              <ProtectedRoute>
+                <UpdateProduct />
               </ProtectedRoute>
             }
           />

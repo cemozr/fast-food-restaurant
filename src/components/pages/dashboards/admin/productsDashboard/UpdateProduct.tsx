@@ -1,19 +1,24 @@
-import { z } from "zod";
+import { useState } from "react";
+import Loading from "../../../../UI/Loading";
 import Button from "../../../../UI/Button";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../states/store";
 import { productSchema } from "./productSchema";
+import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import { addProduct, uploadImage } from "../../../../../states/productSlice";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../../states/store";
-import { toast } from "react-toastify";
-import Loading from "../../../../UI/Loading";
 
 type ProductForm = z.infer<typeof productSchema>;
 
-export default function AddProduct() {
-  const dispatch: AppDispatch = useDispatch();
+export default function UpdateProduct() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.authReducer.user);
+  const { selectedProduct } = useSelector(
+    (state: RootState) => state.productReducer,
+  );
+
   const {
     register,
     handleSubmit,
@@ -22,55 +27,10 @@ export default function AddProduct() {
   } = useForm<ProductForm>({
     resolver: zodResolver(productSchema),
   });
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const onSubmit: SubmitHandler<ProductForm> = async (formData) => {
-    setIsLoading(true);
-    try {
-      const imageUrl = await uploadImage(formData.image);
-
-      const product = {
-        name: formData.name,
-        category: formData.category,
-        description: formData.description,
-        price: formData.price,
-        imageUrl: imageUrl,
-      };
-      console.log(product);
-      await dispatch(addProduct(product));
-      toast.success("Ürün başarıyla eklendi.", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    } catch (error) {
-      console.error("Hata: ", error);
-      toast.error("Bir hata meydana geldi ürün eklenemedi.", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
-  };
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
-      setIsLoading(false);
-    }
-  }, [isSubmitSuccessful]);
+  const onSubmit: SubmitHandler<ProductForm> = async (formData) => {};
   return (
-    <div className="flex flex-col items-center py-10 lg:py-24">
-      <h1 className="font-dancing text-3xl text-txtLight">Ürün Ekle</h1>
+    <div className="flex flex-grow flex-col items-center justify-center bg-primary bg-opacity-70 py-10">
+      <h1 className="font-dancing text-3xl text-txtLight">Ürünü Güncelle</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center gap-4 p-4 text-txtDark md:grid md:grid-cols-2"
@@ -81,6 +41,7 @@ export default function AddProduct() {
           type="text"
           placeholder="Ürün Adı"
           className="h-10 rounded-sm p-3"
+          //   value={selectedProduct.name}
           {...register("name")}
         />
         {errors.name && <p className="text-error">{errors.name.message}</p>}
@@ -88,6 +49,7 @@ export default function AddProduct() {
           type="text"
           placeholder="Ürün Kategorisi"
           className="h-10 rounded-sm p-3"
+          //   value={selectedProduct.category}
           {...register("category")}
         />
         {errors.category && (
@@ -97,6 +59,7 @@ export default function AddProduct() {
           type="text"
           placeholder="Ürün Açıklaması"
           className="h-10 rounded-sm p-3"
+          //   value={selectedProduct.description}
           {...register("description")}
         />
         {errors.description && (
@@ -106,6 +69,7 @@ export default function AddProduct() {
           type="number"
           placeholder="Ürün Fiyatı"
           className="h-10 rounded-sm p-3"
+          //   value={selectedProduct.price}
           {...register("price")}
         />
         {errors.price && <p className="text-error">{errors.price.message}</p>}
@@ -121,10 +85,18 @@ export default function AddProduct() {
         {errors.image && <p className="text-error">{errors.image.message}</p>}
         <div className="flex justify-center">
           <Button el="button" type="submit">
-            Ürün Ekle
+            Ürünü Güncelle
           </Button>
         </div>
       </form>
+      <div className="mt-5">
+        <Button
+          el="button"
+          onClick={() => navigate(`/user/${user?.uid}/dashboard`)}
+        >
+          Geri Dön
+        </Button>
+      </div>
     </div>
   );
 }

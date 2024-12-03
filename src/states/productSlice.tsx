@@ -1,6 +1,12 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../config/firebase";
 
 //types
@@ -16,6 +22,7 @@ type Product = {
 type InitialState = {
   products: Product[];
   status: "idle" | "loading" | "succeeded" | "failed";
+  selectedProduct: Product;
 };
 //functions
 export const uploadImage = async (file: File) => {
@@ -29,6 +36,15 @@ export const uploadImage = async (file: File) => {
     formData,
   );
   return response.data.secure_url;
+};
+
+export const deleteProduct = async (id: string | undefined) => {
+  const docRef = doc(db, "products", `${id}`);
+  try {
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.error("Doc couldn't delete", error);
+  }
 };
 
 export const addProduct = createAsyncThunk(
@@ -47,7 +63,7 @@ export const fetchProducts = createAsyncThunk(
     docs.forEach((doc) => {
       products.push({ id: doc.id, ...doc.data() } as Product);
     });
-    console.log(products);
+
     return products;
   },
 );
@@ -55,12 +71,25 @@ export const fetchProducts = createAsyncThunk(
 const initialState: InitialState = {
   products: [],
   status: "idle",
+  selectedProduct: {
+    id: "",
+    name: "",
+    category: "",
+    description: "",
+    price: 0,
+    imageUrl: "",
+  },
 };
 //Slice
 const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedProduct: (state, action: PayloadAction<Product>) => {
+      state.selectedProduct = action.payload;
+      console.log(state.selectedProduct);
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchProducts.pending, (state) => {
@@ -83,4 +112,4 @@ const productSlice = createSlice({
 
 export default productSlice.reducer;
 
-export const {} = productSlice.actions;
+export const { setSelectedProduct } = productSlice.actions;
