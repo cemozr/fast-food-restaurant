@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type Order = {
-  id: number;
+  id: string | number | undefined;
   name: string;
   image: string;
   price: number;

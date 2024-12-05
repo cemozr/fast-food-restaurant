@@ -53,7 +53,7 @@ export default function Register() {
         }),
       );
 
-      navigate(`/user/${user.uid}/dashboard`);
+      navigate(`/user/${user.uid}`);
       dispatch(setIsLoggedIn(true));
     } catch (error) {
       const errorMessage =

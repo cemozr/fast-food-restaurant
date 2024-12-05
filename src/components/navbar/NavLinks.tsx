@@ -43,7 +43,7 @@ export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
       <div className="flex flex-wrap justify-center gap-4 lg:flex-none">
         <Button
           el="link-with-icon"
-          to={isLoggedIn ? `/user/${user?.uid}/dashboard` : "/auth"}
+          to={isLoggedIn ? `/user/${user?.uid}` : "/auth"}
           onClick={() => setIsOpen(false)}
         >
           {isLoggedIn ? (

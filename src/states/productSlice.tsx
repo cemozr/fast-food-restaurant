@@ -6,11 +6,12 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 
 //types
-type Product = {
+export type Product = {
   id?: string;
   name: string;
   category: string;
@@ -26,16 +27,20 @@ type InitialState = {
 };
 //functions
 export const uploadImage = async (file: File) => {
-  const formData = new FormData();
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "myUploadPreset");
 
-  formData.append("file", file);
-  formData.append("upload_preset", "myUploadPreset");
-
-  const response = await axios.post(
-    "https://api.cloudinary.com/v1_1/dylvgqmwy/image/upload",
-    formData,
-  );
-  return response.data.secure_url;
+    const response = await axios.post(
+      "https://api.cloudinary.com/v1_1/dylvgqmwy/image/upload",
+      formData,
+    );
+    console.log("Image uploaded");
+    return response.data.secure_url;
+  } catch (err) {
+    console.error("image couldn't uploaded", err);
+  }
 };
 
 export const deleteProduct = async (id: string | undefined) => {
@@ -54,7 +59,16 @@ export const addProduct = createAsyncThunk(
     return { id: docRef.id, ...product };
   },
 );
-
+export const updateProduct = async (productToUpdate: Product) => {
+  const docRef = doc(db, "products", productToUpdate.id!);
+  await updateDoc(docRef, {
+    category: productToUpdate.category,
+    description: productToUpdate.description,
+    imageUrl: productToUpdate.imageUrl,
+    name: productToUpdate.name,
+    price: productToUpdate.price,
+  });
+};
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
   async () => {

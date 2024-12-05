@@ -71,9 +71,7 @@ export default function ManageProducts() {
                     className="hover:text-secondary"
                     onClick={() => {
                       dispatch(setSelectedProduct(product));
-                      navigate(
-                        `/user/${authStates.user?.uid}/dashboard/update-product`,
-                      );
+                      navigate(`/user/${authStates.user?.uid}/update-product`);
                     }}
                   >
                     <FaEdit />

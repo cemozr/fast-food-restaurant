@@ -52,7 +52,7 @@ function App() {
           <Route path="/booking" element={<Booking />} />
           <Route path="/auth" element={<Auth />} />
           <Route
-            path="/user/:uid/dashboard"
+            path="/user/:uid/"
             element={
               <ProtectedRoute>
                 {role === "admin" ? <AdminDashboard /> : <UserDashBoard />}
@@ -60,7 +60,7 @@ function App() {
             }
           />
           <Route
-            path="/user/:uid/dashboard/update-product"
+            path="/user/:uid/update-product"
             element={
               <ProtectedRoute>
                 <UpdateProduct />

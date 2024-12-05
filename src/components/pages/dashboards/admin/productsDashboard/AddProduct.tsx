@@ -76,49 +76,57 @@ export default function AddProduct() {
         className="flex flex-col items-center gap-4 p-4 text-txtDark md:grid md:grid-cols-2"
       >
         {isLoading && <Loading />}
-
-        <input
-          type="text"
-          placeholder="Ürün Adı"
-          className="h-10 rounded-sm p-3"
-          {...register("name")}
-        />
-        {errors.name && <p className="text-error">{errors.name.message}</p>}
-        <input
-          type="text"
-          placeholder="Ürün Kategorisi"
-          className="h-10 rounded-sm p-3"
-          {...register("category")}
-        />
-        {errors.category && (
-          <p className="text-error">{errors.category.message}</p>
-        )}
-        <input
-          type="text"
-          placeholder="Ürün Açıklaması"
-          className="h-10 rounded-sm p-3"
-          {...register("description")}
-        />
-        {errors.description && (
-          <p className="text-error">{errors.description.message}</p>
-        )}
-        <input
-          type="number"
-          placeholder="Ürün Fiyatı"
-          className="h-10 rounded-sm p-3"
-          {...register("price")}
-        />
-        {errors.price && <p className="text-error">{errors.price.message}</p>}
-
-        <input
-          id="img"
-          type="file"
-          accept="image/*"
-          placeholder="Ürün Görseli"
-          className="text-txtLight file:ml-10 file:rounded-md file:bg-secondary file:p-2 file:text-txtLight file:hover:cursor-pointer file:hover:bg-secondaryDark md:file:ml-0"
-          {...register("image")}
-        />
-        {errors.image && <p className="text-error">{errors.image.message}</p>}
+        <div className="flex flex-col">
+          <input
+            type="text"
+            placeholder="Ürün Adı"
+            className="h-10 rounded-sm p-3"
+            {...register("name")}
+          />
+          {errors.name && <p className="text-error">{errors.name.message}</p>}
+        </div>
+        <div className="flex flex-col">
+          <input
+            type="text"
+            placeholder="Ürün Kategorisi"
+            className="h-10 rounded-sm p-3"
+            {...register("category")}
+          />
+          {errors.category && (
+            <p className="text-error">{errors.category.message}</p>
+          )}
+        </div>
+        <div className="flex flex-col">
+          <input
+            type="text"
+            placeholder="Ürün Açıklaması"
+            className="h-10 rounded-sm p-3"
+            {...register("description")}
+          />
+          {errors.description && (
+            <p className="text-error">{errors.description.message}</p>
+          )}
+        </div>
+        <div className="flex flex-col">
+          <input
+            type="number"
+            placeholder="Ürün Fiyatı"
+            className="h-10 rounded-sm p-3"
+            {...register("price")}
+          />
+          {errors.price && <p className="text-error">{errors.price.message}</p>}
+        </div>
+        <div className="flex flex-col">
+          <input
+            id="img"
+            type="file"
+            accept="image/*"
+            placeholder="Ürün Görseli"
+            className="text-txtLight file:ml-10 file:rounded-md file:bg-secondary file:p-2 file:text-txtLight file:hover:cursor-pointer file:hover:bg-secondaryDark md:file:ml-0"
+            {...register("image")}
+          />
+          {errors.image && <p className="text-error">{errors.image.message}</p>}
+        </div>
         <div className="flex justify-center">
           <Button el="button" type="submit">
             Ürün Ekle
