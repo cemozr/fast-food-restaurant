@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { ReactNode, useState } from "react";
 import ProductsDashboard from "./productsDashboard/ProductsDashboard";
-import BookingsDashboard from "./BookingsDashboard";
+import BookingsDashboard from "./bookingsDashboard/BookingsDashboard";
 import OrdersDashboard from "./OrdersDashBoard";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../../config/firebase";

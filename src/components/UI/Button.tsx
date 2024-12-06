@@ -67,7 +67,9 @@ export default function Button(
     );
   }
   if (props.el === "button-with-icon") {
-    return <button {...props}></button>;
+    return (
+      <button className="disabled:pointer-events-none" {...props}></button>
+    );
   }
   if (props.el === "link-with-icon") {
     return (

@@ -2,39 +2,83 @@ import { z } from "zod";
 import Button from "../../UI/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
 import formSchema from "./formSchema";
+import { useEffect, useState } from "react";
+import { AppDispatch } from "../../../states/store";
+import { useDispatch } from "react-redux";
+import { addBooking, Booking } from "../../../states/bookingSlice";
+import { toast } from "react-toastify";
+import Loading from "../../UI/Loading";
 
 type Form = z.infer<typeof formSchema>;
-type BookingFormProps = {
-  setIsSubmitted: (isSubmitted: boolean) => void;
-};
-export default function BookingForm({ setIsSubmitted }: BookingFormProps) {
+
+export default function BookingForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitSuccessful },
   } = useForm<Form>({
     resolver: zodResolver(formSchema),
   });
 
-  const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    setIsSubmitted(true);
-    setTimeout(() => {
-      navigate("/");
-    }, 2000);
+    setIsLoading(true);
 
-    console.log(data);
+    const booking: Booking = {
+      name: data.name,
+      tel: data.tel,
+      email: data.email,
+      count: data.count,
+      date: data.date,
+      status: "Beklemede",
+    };
+    try {
+      dispatch(addBooking(booking));
+      toast.success(
+        "Rezervasyon talebinizi oluşturuldu. En kısa zamanda doğrulama için size ulaşacağız.",
+        {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        },
+      );
+    } catch (err) {
+      console.error("addBook failed", err);
+      toast.error("Bir hata meydana geldi rezervasyon talebi oluşturulamadı.", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+
+    // console.log(data);
   };
-
+  useEffect(() => {
+    setIsLoading(false);
+    reset();
+  }, [isSubmitSuccessful]);
   return (
     <div className="flex flex-col gap-3 lg:w-1/2">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex w-full flex-col items-start justify-center gap-4 p-4"
       >
+        {isLoading && <Loading />}
         <h1 className="font-dancing text-4xl">Rezervasyon</h1>
         <input
           {...register("name")}
@@ -46,7 +90,7 @@ export default function BookingForm({ setIsSubmitted }: BookingFormProps) {
         <input
           {...register("tel")}
           className="w-full rounded-md border-2 border-bgDark p-3"
-          type="number"
+          type="string"
           placeholder="Telefon"
         />
         {errors.tel && <p className="text-error">{errors.tel.message}</p>}
