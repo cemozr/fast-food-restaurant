@@ -1,18 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../UI/Button";
 import { ImCross } from "react-icons/im";
-import { calculateTotal, setIsCartActive } from "../../states/cartSlice";
+import { calculateTotal, setIsCartActive } from "../../states/orderSlice";
 import CartItem from "./CartItem";
 import { RootState } from "../../states/store";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 export default function Cart() {
   const dispatch = useDispatch();
-  const orderList = useSelector((state: RootState) => {
-    return state.cartReducer.orderList;
-  });
-  const totalPrice = useSelector((state: RootState) => {
-    return state.cartReducer.totalPrice;
-  });
+  const navigate = useNavigate();
+  const { user } = useSelector((state: RootState) => state.authReducer);
+  const { orderList, totalPrice } = useSelector(
+    (state: RootState) => state.orderReducer,
+  );
+
   useEffect(() => {
     dispatch(calculateTotal());
   }, [totalPrice, orderList]);
@@ -37,11 +38,22 @@ export default function Cart() {
         {orderList.map((order) => {
           return <CartItem key={order.id} order={order} />;
         })}
+        <div className="my-2 h-px w-full bg-bg"></div>
+        <h3 className="font-dancing text-2xl text-txtLight">
+          Toplam Tutar : {totalPrice} ₺
+        </h3>
+        <div className="flex justify-center pb-10 pt-5">
+          <Button
+            el="button"
+            onClick={() => {
+              navigate(`/user/${user?.uid}/order-form`);
+              dispatch(setIsCartActive());
+            }}
+          >
+            Sipariş oluştur
+          </Button>
+        </div>
       </div>
-      <div className="my-2 h-px w-full bg-bg"></div>
-      <h3 className="font-dancing text-2xl text-txtLight">
-        Toplam Tutar : {totalPrice} ₺
-      </h3>
     </div>
   );
 }

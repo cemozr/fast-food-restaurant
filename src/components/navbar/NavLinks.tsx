@@ -1,7 +1,7 @@
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "../UI/Button";
-import { setIsCartActive } from "../../states/cartSlice";
+import { setIsCartActive } from "../../states/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../states/store";
 

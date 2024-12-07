@@ -9,7 +9,7 @@ import {
   increment,
   Order,
   removeFromCart,
-} from "../../states/cartSlice";
+} from "../../states/orderSlice";
 import { useDispatch } from "react-redux";
 
 type CartItemProps = {

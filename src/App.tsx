@@ -17,10 +17,12 @@ import ProtectedRoute from "./ProtectedRoute";
 import ForgotPassword from "./components/pages/forgotPassword/ForgotPassword";
 import { ToastContainer } from "react-toastify";
 import UpdateProduct from "./components/pages/dashboards/admin/productsDashboard/UpdateProduct";
+import OrderForm from "./components/pages/order/OrderForm";
+import OrderConfirmation from "./components/pages/order/OrderConfirmation";
 
 function App() {
   const isCartActive = useSelector((state: RootState) => {
-    return state.cartReducer.isCartActive;
+    return state.orderReducer.isCartActive;
   });
   const role = useSelector((state: RootState) => {
     return state.authReducer.role;
@@ -67,6 +69,23 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/user/:uid/order-form"
+            element={
+              <ProtectedRoute>
+                <OrderForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/:uid/order-form/order-confirmation"
+            element={
+              <ProtectedRoute>
+                <OrderConfirmation />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
         {isCartActive && <Cart />}

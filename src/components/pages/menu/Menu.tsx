@@ -2,7 +2,7 @@ import Button from "../../UI/Button";
 import FoodCard from "./FoodCard";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../states/store";
-import { setIsCartActive } from "../../../states/cartSlice";
+import { setIsCartActive } from "../../../states/orderSlice";
 import { useEffect, useState } from "react";
 import { fetchProducts } from "../../../states/productSlice";
 

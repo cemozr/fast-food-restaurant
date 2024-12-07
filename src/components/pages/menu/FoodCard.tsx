@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import Button from "../../UI/Button";
-import { addToCart } from "../../../states/cartSlice";
+import { addToCart } from "../../../states/orderSlice";
 import { Product } from "../../../states/productSlice";
 
 type FoodCardProps = {
