@@ -24,9 +24,6 @@ function App() {
   const isCartActive = useSelector((state: RootState) => {
     return state.orderReducer.isCartActive;
   });
-  const role = useSelector((state: RootState) => {
-    return state.authReducer.role;
-  });
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -54,17 +51,25 @@ function App() {
           <Route path="/booking" element={<Booking />} />
           <Route path="/auth" element={<Auth />} />
           <Route
-            path="/user/:uid/"
+            path="/admin/:uid"
             element={
-              <ProtectedRoute>
-                {role === "admin" ? <AdminDashboard /> : <UserDashBoard />}
+              <ProtectedRoute requiredRole="admin">
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/user/:uid/update-product"
+            path="/user/:uid"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="user">
+                <UserDashBoard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/:uid/update-product"
+            element={
+              <ProtectedRoute requiredRole="admin">
                 <UpdateProduct />
               </ProtectedRoute>
             }
@@ -72,7 +77,7 @@ function App() {
           <Route
             path="/user/:uid/order-form"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="user">
                 <OrderForm />
               </ProtectedRoute>
             }
@@ -80,7 +85,7 @@ function App() {
           <Route
             path="/user/:uid/order-form/order-confirmation"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="user">
                 <OrderConfirmation />
               </ProtectedRoute>
             }

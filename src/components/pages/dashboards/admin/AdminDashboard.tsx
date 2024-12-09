@@ -2,14 +2,15 @@ import { useDispatch } from "react-redux";
 import { ReactNode, useState } from "react";
 import ProductsDashboard from "./productsDashboard/ProductsDashboard";
 import BookingsDashboard from "./bookingsDashboard/BookingsDashboard";
-import OrdersDashboard from "./OrdersDashBoard";
+import OrdersDashboard from "./ordersDashboard/OrdersDashboard";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../../config/firebase";
-import { setIsLoggedIn, setUser } from "../../../../states/authSlice";
+import { setIsLoggedIn, setRole, setUser } from "../../../../states/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState<{
     name: string;
     component: ReactNode;
@@ -32,7 +33,8 @@ export default function AdminDashboard() {
             signOut(auth).catch((error) => {
               console.error("Çıkış yaparken bir hata oluştu: ", error);
             });
-            dispatch(setIsLoggedIn(false), setUser(null));
+            navigate("/");
+            dispatch(setIsLoggedIn(false), setUser(null), setRole(null));
           }}
         >
           Çıkış Yap

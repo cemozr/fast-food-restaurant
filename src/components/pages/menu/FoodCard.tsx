@@ -1,14 +1,18 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../UI/Button";
-import { addToCart } from "../../../states/orderSlice";
+import { addToCart, setIsCartActive } from "../../../states/orderSlice";
 import { Product } from "../../../states/productSlice";
 import { toast } from "react-toastify";
+import { RootState } from "../../../states/store";
 
 type FoodCardProps = {
   product: Product;
 };
 
 export default function FoodCard({ product }: FoodCardProps) {
+  const { isCartActive } = useSelector(
+    (state: RootState) => state.orderReducer,
+  );
   const dispatch = useDispatch();
   return (
     <div className="p-4 text-txtLight">
@@ -46,6 +50,9 @@ export default function FoodCard({ product }: FoodCardProps) {
                 progress: undefined,
                 theme: "colored",
               });
+              if (!isCartActive) {
+                dispatch(setIsCartActive());
+              }
             }}
           />
         </div>

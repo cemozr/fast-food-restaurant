@@ -23,13 +23,14 @@ import { AppDispatch, RootState } from "../../../states/store";
 import Loading from "../../UI/Loading";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const authStates = useSelector((state: RootState) => {
+  const { role, isLoading, isLoggedIn } = useSelector((state: RootState) => {
     return state.authReducer;
   });
   const {
@@ -58,10 +59,10 @@ export default function Login() {
           email: user.email,
           displayName: user.displayName,
         }),
-        setIsLoggedIn(true),
       );
+      dispatch(setIsLoggedIn(true));
 
-      navigate(`/user/${user.uid}`);
+      navigate(`/${role}/${user?.uid}`);
     } catch (error) {
       toast.error(
         "Giriş başarısız. Bilgilerinizi kontrol edip tekrar deneyiniz.",
@@ -80,9 +81,13 @@ export default function Login() {
       dispatch(setisLoading(false));
     }
   };
+  useEffect(() => {
+    if (isLoggedIn && role) {
+      dispatch(setisLoading(false));
+    }
+  }, [dispatch, role]);
 
-  authStates.isLoggedIn && dispatch(setisLoading(false));
-  return authStates.isLoading ? (
+  return isLoading ? (
     <Loading />
   ) : (
     <>

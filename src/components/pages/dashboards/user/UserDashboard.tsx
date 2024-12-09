@@ -3,11 +3,13 @@ import { AppDispatch, RootState } from "../../../../states/store";
 import Button from "../../../UI/Button";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../../config/firebase";
-import { setIsLoggedIn, setUser } from "../../../../states/authSlice";
-import { MdArrowBackIos, MdArrowForwardIos, MdDelete } from "react-icons/md";
+import { setIsLoggedIn, setRole, setUser } from "../../../../states/authSlice";
+import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
+import { ImCancelCircle } from "react-icons/im";
 import usePagination from "../../../../hooks/usePagination";
 import { useEffect } from "react";
-import { fetchOrders } from "../../../../states/orderSlice";
+import { cancelOrder, fetchOrders } from "../../../../states/orderSlice";
+import { useNavigate } from "react-router-dom";
 
 const tableCols: string[] = [
   "Sipariş Tarihi",
@@ -20,6 +22,7 @@ const tableCols: string[] = [
 
 export default function UserDashBoard() {
   const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
   const { confirmedOrders } = useSelector(
     (state: RootState) => state.orderReducer,
   );
@@ -100,8 +103,15 @@ export default function UserDashBoard() {
                     </p>
                   </td>
                   <td className="p-4 py-5">
-                    <Button el="button-with-icon">
-                      <MdDelete />
+                    <Button
+                      el="button-with-icon"
+                      onClick={() => {
+                        cancelOrder(item.id!);
+                        dispatch(fetchOrders());
+                      }}
+                      disabled={item.status === "İptal Edildi"}
+                    >
+                      <ImCancelCircle className="text-lg hover:text-error" />
                     </Button>
                   </td>
                 </tr>
@@ -141,7 +151,8 @@ export default function UserDashBoard() {
           signOut(auth).catch((error) => {
             console.error("Çıkış yaparken bir hata oluştu: ", error);
           });
-          dispatch(setIsLoggedIn(false), setUser(null));
+          navigate("/");
+          dispatch(setIsLoggedIn(false), setUser(null), setRole(null));
         }}
       >
         Çıkış Yap

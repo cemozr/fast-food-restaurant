@@ -61,6 +61,7 @@ export default function OrderConfirmation() {
       );
     } finally {
       setIsLoading(false);
+      navigate(`/user/${user?.uid}`);
     }
   };
   return (

@@ -20,10 +20,10 @@ const links: { to: string; value: string }[] = [
 
 export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(
-    (state: RootState) => state.authReducer.isLoggedIn,
+  const { isLoggedIn, user, role } = useSelector(
+    (state: RootState) => state.authReducer,
   );
-  const user = useSelector((state: RootState) => state.authReducer.user);
+
   return (
     <div
       id="nav-links"
@@ -44,7 +44,7 @@ export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
       <div className="flex flex-wrap justify-center gap-4 lg:flex-none">
         <Button
           el="link-with-icon"
-          to={isLoggedIn ? `/user/${user?.uid}` : "/auth"}
+          to={isLoggedIn ? `/${role}/${user?.uid}` : "/auth"}
           onClick={() => setIsOpen(false)}
         >
           {isLoggedIn ? (

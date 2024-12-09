@@ -2,13 +2,16 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addDoc,
   collection,
+  doc,
   getDocs,
   query,
   serverTimestamp,
   Timestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
+import { toast } from "react-toastify";
 
 export type Order = {
   id?: string;
@@ -80,8 +83,9 @@ export const createOrder = createAsyncThunk(
   },
 );
 
-export const fetchOrders = createAsyncThunk("order,fetchOrders", async () => {
+export const fetchOrders = createAsyncThunk("order/fetchOrders", async () => {
   const userId = auth.currentUser?.uid;
+
   const ordersQuery = query(
     collection(db, "orders"),
     where("userId", "==", userId),
@@ -97,10 +101,26 @@ export const fetchOrders = createAsyncThunk("order,fetchOrders", async () => {
           ? data.createdAt.toDate().toISOString()
           : null,
     } as ConfirmedOrderData;
-    // return { id: doc.id, ...doc.data() } as ConfirmedOrderData;
   });
   return orders;
 });
+
+export const cancelOrder = async (orderId: string) => {
+  const docRef = doc(db, "orders", orderId);
+  await updateDoc(docRef, {
+    status: "İptal Edildi",
+  });
+  toast.error("Sipariş İptal edildi.", {
+    position: "bottom-left",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+};
 
 const orderSlice = createSlice({
   name: "order",

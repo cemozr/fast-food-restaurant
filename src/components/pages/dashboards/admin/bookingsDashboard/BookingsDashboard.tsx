@@ -42,7 +42,7 @@ export default function BookingsDashboard() {
   }, [dispatch]);
 
   return (
-    <div className="relative flex h-full w-full flex-col overflow-scroll bg-primary bg-opacity-70 bg-clip-border py-3 text-txtLight lg:w-3/4 lg:rounded-lg">
+    <div className="relative flex h-full w-full flex-col overflow-scroll bg-primary bg-opacity-70 bg-clip-border py-3 text-txtLight lg:w-3/4 lg:overflow-hidden lg:rounded-lg">
       <h1 className="mb-5 text-center font-dancing text-3xl">
         Rezervasyonlarım
       </h1>
