@@ -7,11 +7,11 @@ import { AppDispatch, RootState } from "../../../states/store";
 import { createOrder } from "../../../states/orderSlice";
 import { toast } from "react-toastify";
 import Loading from "../../UI/Loading";
+import usePagination from "../../../hooks/usePagination";
 
 const tableCols = ["Ürün Görseli", "Ürün Adı", "Fiyat", "Adet"];
 
 export default function OrderConfirmation() {
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.authReducer);
@@ -19,12 +19,17 @@ export default function OrderConfirmation() {
     (state: RootState) => state.orderReducer,
   );
   const navigate = useNavigate();
-  //pagination
-  const itemsPerPage: number = 3;
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedItems = confirmedOrderData.items.slice(startIndex, endIndex);
-  //handle confirm
+
+  const {
+    startIndex,
+    endIndex,
+    displayedItems,
+    currentPage,
+    totalPages,
+    nextPage,
+    previousPage,
+  } = usePagination({ itemList: confirmedOrderData.items, itemsPerPage: 3 });
+
   const handleOrderConfirm = () => {
     setIsLoading(true);
     try {
@@ -124,15 +129,15 @@ export default function OrderConfirmation() {
           <div className="flex space-x-2">
             <Button
               el="button-with-icon"
-              onClick={() => setCurrentPage(currentPage - 1)}
+              onClick={previousPage}
               disabled={currentPage === 1}
             >
               <MdArrowBackIos className="text-xl hover:text-secondary" />
             </Button>
             <Button
               el="button-with-icon"
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={endIndex >= confirmedOrderData.items.length}
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
             >
               <MdArrowForwardIos className="text-xl hover:text-secondary" />
             </Button>

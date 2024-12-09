@@ -73,7 +73,7 @@ export default function Button(
   }
   if (props.el === "link-with-icon") {
     return (
-      <button {...props} className="flex items-center">
+      <button {...props} className="flex h-full items-center">
         <Link to={props.to}>{props.children}</Link>
       </button>
     );

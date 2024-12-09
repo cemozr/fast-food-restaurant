@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import Button from "../../UI/Button";
 import { addToCart } from "../../../states/orderSlice";
 import { Product } from "../../../states/productSlice";
+import { toast } from "react-toastify";
 
 type FoodCardProps = {
   product: Product;
@@ -25,7 +26,7 @@ export default function FoodCard({ product }: FoodCardProps) {
           <span className="text-lg">{product.price}₺</span>
           <Button
             el="button-add-cart"
-            onClick={() =>
+            onClick={() => {
               dispatch(
                 addToCart({
                   id: product.id,
@@ -34,8 +35,18 @@ export default function FoodCard({ product }: FoodCardProps) {
                   price: product.price,
                   count: 1,
                 }),
-              )
-            }
+              );
+              toast.success("Sepete Eklendi.", {
+                position: "bottom-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            }}
           />
         </div>
       </div>

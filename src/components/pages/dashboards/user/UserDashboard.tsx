@@ -1,17 +1,140 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { RootState } from "../../../../states/store";
+import { AppDispatch, RootState } from "../../../../states/store";
 import Button from "../../../UI/Button";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../../config/firebase";
 import { setIsLoggedIn, setUser } from "../../../../states/authSlice";
+import { MdArrowBackIos, MdArrowForwardIos, MdDelete } from "react-icons/md";
+import usePagination from "../../../../hooks/usePagination";
+import { useEffect } from "react";
+import { fetchOrders } from "../../../../states/orderSlice";
+
+const tableCols: string[] = [
+  "Sipariş Tarihi",
+  "Ürünler",
+  "Toplam Tutar",
+  "Adres",
+  "Durum",
+  " ",
+];
 
 export default function UserDashBoard() {
-  const dispatch = useDispatch();
-  const { uid } = useParams();
-  const user = useSelector((state: RootState) => state.authReducer.user);
+  const dispatch: AppDispatch = useDispatch();
+  const { confirmedOrders } = useSelector(
+    (state: RootState) => state.orderReducer,
+  );
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [dispatch]);
+
+  const {
+    currentPage,
+    displayedItems,
+    endIndex,
+    nextPage,
+    previousPage,
+    startIndex,
+    totalPages,
+  } = usePagination({ itemList: confirmedOrders, itemsPerPage: 2 });
   return (
-    <div className="flex flex-grow items-center justify-center bg-primary bg-opacity-70 text-txtLight lg:bg-opacity-0 lg:bg-none">
+    <div className="flex flex-grow flex-col items-center justify-center bg-primary bg-opacity-70 text-txtLight lg:px-10">
+      <h1 className="my-5 font-dancing text-3xl">Siparişleriniz</h1>
+      <div className="relative mb-5 flex w-full flex-col overflow-scroll bg-clip-border text-txtLight lg:overflow-hidden lg:rounded-lg">
+        <table className="min-w-max table-auto text-left">
+          <thead>
+            <tr>
+              {tableCols.map((col, i) => {
+                return (
+                  <th key={i} className="bg-secondaryDark p-4">
+                    <p className="font-semibold leading-none text-txtLight">
+                      {col}
+                    </p>
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {displayedItems.map((item) => {
+              console.log(typeof item.createdAt);
+              const formattedDate = item.createdAt
+                ? new Date(item.createdAt).toLocaleString("tr-TR", {
+                    timeZone: "Europe/Istanbul",
+                  })
+                : "Tarih bilgisi yok";
+              return (
+                <tr
+                  key={item.id}
+                  className="border-b border-txtLight hover:bg-primary"
+                >
+                  <td className="p-4 py-5">
+                    <p className="block text-sm font-semibold text-txtLight">
+                      {formattedDate}
+                    </p>
+                  </td>
+                  <td className="p-4 py-5">
+                    {item.items.map((product) => {
+                      return (
+                        <p
+                          key={product.id}
+                          className="block text-sm font-semibold text-txtLight"
+                        >
+                          {product.name} x <b>{product.count}</b>
+                        </p>
+                      );
+                    })}
+                  </td>
+                  <td className="p-4 py-5">
+                    <p className="block text-sm font-semibold text-txtLight">
+                      {item.totalPrice} ₺
+                    </p>
+                  </td>
+                  <td className="p-4 py-5">
+                    <p className="block text-sm font-semibold text-txtLight">
+                      {item.userInfo.address}
+                    </p>
+                  </td>
+                  <td className="p-4 py-5">
+                    <p className="block text-sm font-semibold text-txtLight">
+                      {item.status}
+                    </p>
+                  </td>
+                  <td className="p-4 py-5">
+                    <Button el="button-with-icon">
+                      <MdDelete />
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="text-sm text-secondary">
+            Gösterilen:{" "}
+            <b>
+              {startIndex} - {endIndex}
+            </b>{" "}
+            Toplam: <b> {confirmedOrders.length}</b> Sipariş
+          </div>
+          <div className="flex space-x-2">
+            <Button
+              el="button-with-icon"
+              onClick={previousPage}
+              disabled={currentPage === 1}
+            >
+              <MdArrowBackIos className="text-xl hover:text-secondary" />
+            </Button>
+            <Button
+              el="button-with-icon"
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
+            >
+              <MdArrowForwardIos className="text-xl hover:text-secondary" />
+            </Button>
+          </div>
+        </div>
+      </div>
       <Button
         el="button"
         onClick={() => {

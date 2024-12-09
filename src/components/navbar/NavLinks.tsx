@@ -1,9 +1,10 @@
-import { FaUser, FaShoppingCart } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "../UI/Button";
 import { setIsCartActive } from "../../states/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../states/store";
+import CartIcon from "../UI/CartIcon";
 
 type NavLinksProps = {
   isOpen?: boolean;
@@ -49,7 +50,7 @@ export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
           {isLoggedIn ? (
             <p className="text-txtLight underline">Hesabım</p>
           ) : (
-            <FaUser color="white" className="hover:fill-secondary" />
+            <FaUser color="white" className="text-xl hover:fill-secondary" />
           )}
         </Button>
         <Button
@@ -59,7 +60,7 @@ export default function NavLinks({ isOpen, setIsOpen }: NavLinksProps) {
             setIsOpen(false);
           }}
         >
-          <FaShoppingCart color="white" className="hover:fill-secondary" />
+          <CartIcon />
         </Button>
         <Button el="link" to="/menu" onClick={() => setIsOpen(false)}>
           Online Sipariş

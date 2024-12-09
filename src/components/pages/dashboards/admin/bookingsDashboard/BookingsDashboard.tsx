@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../states/store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Button from "../../../../UI/Button";
 import { MdArrowForwardIos } from "react-icons/md";
 import { MdArrowBackIos } from "react-icons/md";
@@ -8,6 +8,7 @@ import {
   fetchBookings,
   updateBookingStatus,
 } from "../../../../../states/bookingSlice";
+import usePagination from "../../../../../hooks/usePagination";
 const tableCols = [
   "İsim",
   "Telefon",
@@ -18,13 +19,18 @@ const tableCols = [
 ];
 
 export default function BookingsDashboard() {
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const { bookings } = useSelector((state: RootState) => state.bookingReducer);
   const dispatch: AppDispatch = useDispatch();
-  const itemsPerPage: number = 4;
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedItems = bookings.slice(startIndex, endIndex);
+
+  const {
+    currentPage,
+    displayedItems,
+    endIndex,
+    nextPage,
+    previousPage,
+    startIndex,
+    totalPages,
+  } = usePagination({ itemList: bookings, itemsPerPage: 4 });
 
   useEffect(() => {
     dispatch(fetchBookings());
@@ -114,15 +120,15 @@ export default function BookingsDashboard() {
         <div className="flex space-x-2">
           <Button
             el="button-with-icon"
-            onClick={() => setCurrentPage(currentPage - 1)}
+            onClick={previousPage}
             disabled={currentPage === 1}
           >
             <MdArrowBackIos className="text-xl hover:text-secondary" />
           </Button>
           <Button
             el="button-with-icon"
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={endIndex >= bookings.length}
+            onClick={nextPage}
+            disabled={currentPage === totalPages}
           >
             <MdArrowForwardIos className="text-xl hover:text-secondary" />
           </Button>

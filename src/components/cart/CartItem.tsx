@@ -33,7 +33,7 @@ export default function CartItem({ order }: CartItemProps) {
       <div className="flex flex-col items-center justify-center gap-2">
         <Button
           el="button-with-icon"
-          onClick={() => dispatch(increment({ id: order.id }))}
+          onClick={() => dispatch(increment({ id: order.id! }))}
           className="text-primary hover:text-secondary"
         >
           <FaPlus />
@@ -41,7 +41,7 @@ export default function CartItem({ order }: CartItemProps) {
         <p>{order.count}</p>
         <Button
           el="button-with-icon"
-          onClick={() => dispatch(decrement({ id: order.id }))}
+          onClick={() => dispatch(decrement({ id: order.id! }))}
           className="text-primary hover:text-secondary"
         >
           <FaMinus />
@@ -49,7 +49,7 @@ export default function CartItem({ order }: CartItemProps) {
       </div>
       <Button
         el="button-with-icon"
-        onClick={() => dispatch(removeFromCart({ id: order.id }))}
+        onClick={() => dispatch(removeFromCart({ id: order.id! }))}
         className="pr-1 text-xl text-primary hover:text-error"
       >
         <MdDelete />
