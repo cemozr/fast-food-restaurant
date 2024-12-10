@@ -36,7 +36,7 @@ export default function BookingsDashboard() {
     dispatch(fetchBookings());
     const interval = setInterval(() => {
       dispatch(fetchBookings());
-    }, 10000); //fetch every 10 seconds
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [dispatch]);

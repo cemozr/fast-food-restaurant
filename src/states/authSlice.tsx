@@ -1,8 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   loadFromLocalStorage,
   saveToLocalStorage,
 } from "../utils/localStorage";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../config/firebase";
+import { signOut } from "firebase/auth";
 
 export type User = {
   uid: string;
@@ -26,6 +29,20 @@ const initialState: InitialState = {
   role: null,
 };
 
+export const fetchUserRole = createAsyncThunk(
+  "auth/fetchUserRole",
+  async (uid: string) => {
+    const userDoc = await getDoc(doc(db, "users", uid));
+    return userDoc.exists() ? userDoc.data().role : "user";
+  },
+);
+
+export const logout = createAsyncThunk("auth/logout", () => {
+  signOut(auth).catch((error) => {
+    console.error("Çıkış yaparken bir hata oluştu: ", error);
+  });
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -47,6 +64,31 @@ const authSlice = createSlice({
     setRole: (state, action: PayloadAction<string | null>) => {
       state.role = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUserRole.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUserRole.fulfilled, (state, action) => {
+        state.role = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchUserRole.rejected, (state) => {
+        state.role = null;
+        state.isLoading = false;
+      })
+      .addCase(logout.pending, () => {
+        console.log("logging out");
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.isLoggedIn = false;
+        state.user = null;
+        state.role = null;
+      })
+      .addCase(logout.rejected, (_, action) => {
+        console.error("logout failed", action.error.message);
+      });
   },
 });
 

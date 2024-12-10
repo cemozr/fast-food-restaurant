@@ -8,8 +8,8 @@ import Header from "./components/navbar/Header";
 import Footer from "./components/Footer";
 import bgImage from "./assets/hero-bg.jpg";
 import Cart from "./components/cart/Cart";
-import { useSelector } from "react-redux";
-import { RootState } from "./states/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "./states/store";
 import Auth from "./components/pages/auth/Auth";
 import AdminDashboard from "./components/pages/dashboards/admin/AdminDashboard";
 import UserDashBoard from "./components/pages/dashboards/user/UserDashboard";
@@ -19,12 +19,31 @@ import { ToastContainer } from "react-toastify";
 import UpdateProduct from "./components/pages/dashboards/admin/productsDashboard/UpdateProduct";
 import OrderForm from "./components/pages/order/OrderForm";
 import OrderConfirmation from "./components/pages/order/OrderConfirmation";
+import Error404 from "./components/pages/Error404";
+import { useEffect } from "react";
+import { auth } from "./config/firebase";
+import { fetchUserRole } from "./states/authSlice";
+import Loading from "./components/UI/Loading";
 
 function App() {
   const isCartActive = useSelector((state: RootState) => {
     return state.orderReducer.isCartActive;
   });
-
+  const { isLoading } = useSelector((state: RootState) => state.authReducer);
+  const dispatch: AppDispatch = useDispatch();
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+      if (currentUser) {
+        const userRole = await dispatch(
+          fetchUserRole(currentUser.uid),
+        ).unwrap();
+        if (!userRole) {
+          console.error("Role bilgisi alınamadı.");
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [dispatch]);
   return (
     <div className="flex min-h-screen flex-col">
       <div className="fixed left-0 top-0 z-[-1] h-full w-full">
@@ -92,6 +111,7 @@ function App() {
           />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="*" element={<Error404 />} />
         </Routes>
         {isCartActive && <Cart />}
         <Footer />

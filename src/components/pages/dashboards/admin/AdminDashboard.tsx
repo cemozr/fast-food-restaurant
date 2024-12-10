@@ -3,13 +3,12 @@ import { ReactNode, useState } from "react";
 import ProductsDashboard from "./productsDashboard/ProductsDashboard";
 import BookingsDashboard from "./bookingsDashboard/BookingsDashboard";
 import OrdersDashboard from "./ordersDashboard/OrdersDashboard";
-import { signOut } from "firebase/auth";
-import { auth } from "../../../../config/firebase";
-import { setIsLoggedIn, setRole, setUser } from "../../../../states/authSlice";
+import { logout } from "../../../../states/authSlice";
 import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../../../states/store";
 
 export default function AdminDashboard() {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState<{
     name: string;
@@ -24,18 +23,18 @@ export default function AdminDashboard() {
     { name: "Rezervasyonları Yönet", component: <BookingsDashboard /> },
     { name: "Siparişleri Yönet", component: <OrdersDashboard /> },
   ];
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
+
   return (
     <div className="flex flex-grow flex-col items-center text-txtLight">
       <ul className="my-4 flex flex-col gap-2 py-2 text-center text-lg font-semibold text-txtLight lg:flex-row lg:gap-6">
         <span
           className="order-2 hover:cursor-pointer hover:text-error"
-          onClick={() => {
-            signOut(auth).catch((error) => {
-              console.error("Çıkış yaparken bir hata oluştu: ", error);
-            });
-            navigate("/");
-            dispatch(setIsLoggedIn(false), setUser(null), setRole(null));
-          }}
+          onClick={handleLogout}
         >
           Çıkış Yap
         </span>

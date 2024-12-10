@@ -20,6 +20,12 @@ export type Order = {
   price: number;
   count: number;
 };
+export type OrderStatus =
+  | "Beklemede"
+  | "Hazırlanıyor"
+  | "Yola Çıktı"
+  | "Teslim Edildi"
+  | "İptal Edildi";
 type UserInfo = {
   name: string;
   tel: string;
@@ -32,12 +38,7 @@ type ConfirmedOrderData = {
   items: Order[];
   totalPrice: number;
   createdAt?: string | null;
-  status:
-    | "Beklemede"
-    | "Hazırlanıyor"
-    | "Yola Çıktı"
-    | "Teslim Edildi"
-    | "İptal Edildi";
+  status: OrderStatus;
 };
 type ConfirmedOrders = ConfirmedOrderData[];
 type InitialState = {
@@ -105,12 +106,54 @@ export const fetchOrders = createAsyncThunk("order/fetchOrders", async () => {
   return orders;
 });
 
+export const fetchAllOrders = createAsyncThunk(
+  "order/fetchAllOrders",
+  async () => {
+    const docs = await getDocs(collection(db, "orders"));
+    const orders: ConfirmedOrders = [];
+
+    docs.forEach((doc) => {
+      const data = doc.data();
+      orders.push({
+        id: doc.id,
+        ...data,
+        createdAt:
+          data.createdAt instanceof Timestamp
+            ? data.createdAt.toDate().toISOString()
+            : null,
+      } as ConfirmedOrderData);
+    });
+    return orders;
+  },
+);
+
 export const cancelOrder = async (orderId: string) => {
   const docRef = doc(db, "orders", orderId);
   await updateDoc(docRef, {
     status: "İptal Edildi",
   });
+
   toast.error("Sipariş İptal edildi.", {
+    position: "bottom-left",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+};
+
+export const updateOrderStatus = async (
+  orderId: string,
+  newStatus: OrderStatus,
+) => {
+  const docRef = doc(db, "orders", orderId);
+  await updateDoc(docRef, {
+    status: newStatus,
+  });
+  toast.success("Sipariş Durumu Güncellendi.", {
     position: "bottom-left",
     autoClose: 5000,
     hideProgressBar: false,
@@ -187,6 +230,15 @@ const orderSlice = createSlice({
         state.confirmedOrders = action.payload;
       })
       .addCase(fetchOrders.rejected, (_, action) => {
+        console.error("Orders couldn't fetch", action.error.message);
+      })
+      .addCase(fetchAllOrders.pending, () => {
+        console.log("orders fetching");
+      })
+      .addCase(fetchAllOrders.fulfilled, (state, action) => {
+        state.confirmedOrders = action.payload;
+      })
+      .addCase(fetchAllOrders.rejected, (_, action) => {
         console.error("Orders couldn't fetch", action.error.message);
       });
   },

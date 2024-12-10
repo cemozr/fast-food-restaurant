@@ -1,9 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../states/store";
 import Button from "../../../UI/Button";
-import { signOut } from "firebase/auth";
-import { auth } from "../../../../config/firebase";
-import { setIsLoggedIn, setRole, setUser } from "../../../../states/authSlice";
+import { logout } from "../../../../states/authSlice";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import { ImCancelCircle } from "react-icons/im";
 import usePagination from "../../../../hooks/usePagination";
@@ -39,6 +37,11 @@ export default function UserDashBoard() {
     startIndex,
     totalPages,
   } = usePagination({ itemList: confirmedOrders, itemsPerPage: 2 });
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
   return (
     <div className="flex flex-grow flex-col items-center justify-center bg-primary bg-opacity-70 text-txtLight lg:px-10">
       <h1 className="my-5 font-dancing text-3xl">Siparişleriniz</h1>
@@ -59,7 +62,6 @@ export default function UserDashBoard() {
           </thead>
           <tbody>
             {displayedItems.map((item) => {
-              console.log(typeof item.createdAt);
               const formattedDate = item.createdAt
                 ? new Date(item.createdAt).toLocaleString("tr-TR", {
                     timeZone: "Europe/Istanbul",
@@ -145,16 +147,7 @@ export default function UserDashBoard() {
           </div>
         </div>
       </div>
-      <Button
-        el="button"
-        onClick={() => {
-          signOut(auth).catch((error) => {
-            console.error("Çıkış yaparken bir hata oluştu: ", error);
-          });
-          navigate("/");
-          dispatch(setIsLoggedIn(false), setUser(null), setRole(null));
-        }}
-      >
+      <Button el="button" onClick={handleLogout}>
         Çıkış Yap
       </Button>
     </div>

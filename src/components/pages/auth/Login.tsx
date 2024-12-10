@@ -7,9 +7,11 @@ import { CiLogin } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegSadCry } from "react-icons/fa";
 import {
+  fetchUserRole,
   setisLoading,
   setIsLoggedIn,
   setIsRegistered,
+  setRole,
   setUser,
 } from "../../../states/authSlice";
 import {
@@ -17,22 +19,25 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../../../config/firebase";
+import { auth, db } from "../../../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../../states/store";
 import Loading from "../../UI/Loading";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
 
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const { role, isLoading, isLoggedIn } = useSelector((state: RootState) => {
-    return state.authReducer;
-  });
+  const { role, isLoading, isLoggedIn, user } = useSelector(
+    (state: RootState) => {
+      return state.authReducer;
+    },
+  );
   const {
     register,
     handleSubmit,
@@ -44,7 +49,6 @@ export default function Login() {
   const onSubmit: SubmitHandler<LoginForm> = async (formData) => {
     try {
       dispatch(setisLoading(true));
-      setPersistence(auth, browserSessionPersistence);
       const userData = await signInWithEmailAndPassword(
         auth,
         formData.email,
@@ -61,8 +65,6 @@ export default function Login() {
         }),
       );
       dispatch(setIsLoggedIn(true));
-
-      navigate(`/${role}/${user?.uid}`);
     } catch (error) {
       toast.error(
         "Giriş başarısız. Bilgilerinizi kontrol edip tekrar deneyiniz.",
@@ -82,10 +84,19 @@ export default function Login() {
     }
   };
   useEffect(() => {
+    if (isLoggedIn && user?.uid) {
+      dispatch(fetchUserRole(user.uid));
+    }
+  }, [dispatch, isLoggedIn, user?.uid]);
+
+  useEffect(() => {
     if (isLoggedIn && role) {
       dispatch(setisLoading(false));
+      navigate(`/${role}/${user?.uid}`);
+    } else if (isLoggedIn && role === null) {
+      console.log("Role bilgisi alınamadı.");
     }
-  }, [dispatch, role]);
+  }, [isLoggedIn, role, user?.uid, dispatch, navigate]);
 
   return isLoading ? (
     <Loading />
