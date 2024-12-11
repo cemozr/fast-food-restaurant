@@ -23,13 +23,12 @@ import Error404 from "./components/pages/Error404";
 import { useEffect } from "react";
 import { auth } from "./config/firebase";
 import { fetchUserRole } from "./states/authSlice";
-import Loading from "./components/UI/Loading";
 
 function App() {
   const isCartActive = useSelector((state: RootState) => {
     return state.orderReducer.isCartActive;
   });
-  const { isLoading } = useSelector((state: RootState) => state.authReducer);
+
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
