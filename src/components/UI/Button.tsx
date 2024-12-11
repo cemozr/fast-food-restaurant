@@ -10,7 +10,7 @@ type LinkButtonProps = {
   el: "link";
   children: ReactNode;
   to: string;
-};
+} & ComponentPropsWithoutRef<"button">;
 type ButtonCategoryProps = {
   el: "button-category";
 } & ComponentPropsWithoutRef<"button">;
@@ -21,6 +21,11 @@ type ButtonAddCartProps = {
 type ButtonWithIconProps = {
   el: "button-with-icon";
 } & ComponentPropsWithoutRef<"button">;
+type LinkWithIconProps = {
+  el: "link-with-icon";
+  to: string;
+  children: ReactNode;
+} & ComponentPropsWithoutRef<"button">;
 
 export default function Button(
   props:
@@ -28,16 +33,19 @@ export default function Button(
     | LinkButtonProps
     | ButtonCategoryProps
     | ButtonAddCartProps
-    | ButtonWithIconProps,
+    | ButtonWithIconProps
+    | LinkWithIconProps,
 ) {
   if (props.el === "link") {
     return (
-      <Link
-        className="w-40 rounded-full bg-secondary px-7 py-2 font-semibold text-txtLight hover:bg-secondaryDark"
-        to={props.to}
-      >
-        {props.children}
-      </Link>
+      <button {...props}>
+        <Link
+          className="w-40 rounded-full bg-secondary px-7 py-2 font-semibold text-txtLight hover:bg-secondaryDark"
+          to={props.to}
+        >
+          {props.children}
+        </Link>
+      </button>
     );
   }
   if (props.el === "button-category") {
@@ -59,11 +67,20 @@ export default function Button(
     );
   }
   if (props.el === "button-with-icon") {
-    return <button {...props}></button>;
+    return (
+      <button className="disabled:pointer-events-none" {...props}></button>
+    );
+  }
+  if (props.el === "link-with-icon") {
+    return (
+      <button {...props} className="flex h-full items-center">
+        <Link to={props.to}>{props.children}</Link>
+      </button>
+    );
   }
   return (
     <button
-      className="w-40 rounded-full bg-secondary px-7 py-2 font-semibold text-txtLight hover:bg-secondaryDark"
+      className="w-44 rounded-full bg-secondary px-7 py-2 font-semibold text-txtLight hover:bg-secondaryDark"
       {...props}
     ></button>
   );
