@@ -6,7 +6,6 @@ All text content and default products created by ChatGPT.
 <br/>
 This is a fullstack web application with these features:
 <br/>
-<br/>
 1. Order System
 2. Booking
 3. Authentication
