@@ -1,22 +1,18 @@
-Design and images provided from [html Design](https://html.design/download/feane-fast-food-html-template/)
+Some parts of design and images provided from [html Design](https://html.design/download/feane-fast-food-html-template/)
 <br/>
 <br/>
-License : Creative Commons 3.0 – Free to
-use for personal and commercial use
+All text content and default products created by ChatGPT.
 <br/>
 <br/>
-This project is still under development.
+This is a fullstack web application with these features:
 <br/>
 <br/>
-Planned features:
-<br/>
-
-- ~~Category filtering~~
-  <br/>
-- ~~Shopping cart~~
-  <br/>
-- User registration and auth
-  <br/>
-- User panel to track orders and bookings
-  <br/>
-- Admin panel to track orders and bookings
+1. Order System
+2. Booking
+3. Authentication
+4. Admin Dashboard
+   - Product Management (All CRUD operations included)
+   - Booking Management
+   - Order Management
+5. User Dashboard
+   - Order Management
