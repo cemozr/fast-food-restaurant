@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "./states/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "./states/store";
 import Loading from "./components/UI/Loading";
+import { fetchUserRole } from "./states/authSlice";
 
 type ProtectedRouteProps = {
   children: ReactNode;
@@ -16,7 +17,12 @@ export default function ProtectedRoute({
   const { user, role, isLoading } = useSelector((state: RootState) => {
     return state.authReducer;
   });
+  const dispatch: AppDispatch = useDispatch();
   if (isLoading || role === null) {
+    dispatch(fetchUserRole(user?.uid!));
+    if (role !== null && role === requiredRole) {
+      return <>{children}</>;
+    }
     return <Loading />;
   }
   if (!user) {

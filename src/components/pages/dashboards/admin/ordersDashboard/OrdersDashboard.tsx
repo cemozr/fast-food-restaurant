@@ -9,12 +9,14 @@ import {
 import Button from "../../../../UI/Button";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import { useEffect } from "react";
+import useFormatDate from "../../../../../hooks/useFormatDate";
 
 export default function OrdersDashboard() {
   const { confirmedOrders } = useSelector(
     (state: RootState) => state.orderReducer,
   );
   const dispatch: AppDispatch = useDispatch();
+
   const {
     currentPage,
     displayedItems,
@@ -42,7 +44,6 @@ export default function OrdersDashboard() {
     "Adres",
     "Telefon",
     "Durum",
-    " ",
   ];
 
   return (
@@ -66,11 +67,15 @@ export default function OrdersDashboard() {
         </thead>
         <tbody>
           {displayedItems.map((item, i) => {
+            const formattedDate = useFormatDate(item.createdAt);
             return (
-              <tr key={i} className="border-b border-txtLight hover:bg-primary">
+              <tr
+                key={i}
+                className={`w-full border-b border-txtLight ${item.status === "İptal Edildi" ? "bg-error bg-opacity-30 hover:bg-red-900" : "hover:bg-primary"}`}
+              >
                 <td className="p-4 py-5">
                   <p className="block text-sm font-semibold text-txtLight">
-                    {item.createdAt}
+                    {formattedDate}
                   </p>
                 </td>
 
@@ -108,9 +113,10 @@ export default function OrdersDashboard() {
                 </td>
                 <td className="p-4 py-5">
                   <select
-                    className="rounded-sm bg-secondary px-2 text-primary hover:cursor-pointer"
+                    className={` ${item.status === "İptal Edildi" ? "bg-error hover:cursor-not-allowed" : "bg-secondary hover:cursor-pointer"} rounded-sm px-2 text-primary`}
                     id="status"
                     value={item.status}
+                    disabled={item.status === "İptal Edildi"}
                     onChange={(e) => {
                       updateOrderStatus(
                         item.id!,

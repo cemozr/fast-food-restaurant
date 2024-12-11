@@ -6,10 +6,13 @@ import CartItem from "./CartItem";
 import { RootState } from "../../states/store";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 export default function Cart() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state: RootState) => state.authReducer);
+  const { user, isLoggedIn, role } = useSelector(
+    (state: RootState) => state.authReducer,
+  );
   const { orderList, totalPrice } = useSelector(
     (state: RootState) => state.orderReducer,
   );
@@ -17,7 +20,39 @@ export default function Cart() {
   useEffect(() => {
     dispatch(calculateTotal());
   }, [totalPrice, orderList]);
-
+  const handleOrder = () => {
+    if (orderList.length === 0) {
+      return toast.error("Sepetiniz boş. Menüden ürün ekleyebilirsiniz.", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+    if (isLoggedIn && role !== null) {
+      navigate(`/user/${user?.uid}/order-form`);
+    } else {
+      toast.info(
+        "Lütfen önce giriş yapınız. Bir üyeliğiniz yoksa ücretsiz bir şekilde üyelik oluşturabilirsiniz.",
+        {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        },
+      );
+      navigate("/auth");
+    }
+    dispatch(setIsCartActive());
+  };
   return (
     <div
       id="cart"
@@ -43,13 +78,7 @@ export default function Cart() {
           Toplam Tutar : {totalPrice} ₺
         </h3>
         <div className="flex justify-center pb-10 pt-5">
-          <Button
-            el="button"
-            onClick={() => {
-              navigate(`/user/${user?.uid}/order-form`);
-              dispatch(setIsCartActive());
-            }}
-          >
+          <Button el="button" onClick={handleOrder}>
             Sipariş oluştur
           </Button>
         </div>

@@ -11,22 +11,16 @@ import {
   setisLoading,
   setIsLoggedIn,
   setIsRegistered,
-  setRole,
   setUser,
 } from "../../../states/authSlice";
-import {
-  browserSessionPersistence,
-  setPersistence,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { auth, db } from "../../../config/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../../states/store";
 import Loading from "../../UI/Loading";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
-import { doc, getDoc } from "firebase/firestore";
 
 type LoginForm = z.infer<typeof loginSchema>;
 

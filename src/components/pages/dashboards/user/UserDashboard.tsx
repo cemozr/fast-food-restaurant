@@ -8,6 +8,7 @@ import usePagination from "../../../../hooks/usePagination";
 import { useEffect } from "react";
 import { cancelOrder, fetchOrders } from "../../../../states/orderSlice";
 import { useNavigate } from "react-router-dom";
+import useFormatDate from "../../../../hooks/useFormatDate";
 
 const tableCols: string[] = [
   "Sipariş Tarihi",
@@ -62,15 +63,11 @@ export default function UserDashBoard() {
           </thead>
           <tbody>
             {displayedItems.map((item) => {
-              const formattedDate = item.createdAt
-                ? new Date(item.createdAt).toLocaleString("tr-TR", {
-                    timeZone: "Europe/Istanbul",
-                  })
-                : "Tarih bilgisi yok";
+              const formattedDate = useFormatDate(item.createdAt);
               return (
                 <tr
                   key={item.id}
-                  className="border-b border-txtLight hover:bg-primary"
+                  className={`w-full border-b border-txtLight ${item.status === "İptal Edildi" ? "bg-error bg-opacity-30 hover:bg-red-900" : "hover:bg-primary"}`}
                 >
                   <td className="p-4 py-5">
                     <p className="block text-sm font-semibold text-txtLight">

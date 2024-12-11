@@ -41,6 +41,7 @@ export const logout = createAsyncThunk("auth/logout", () => {
   signOut(auth).catch((error) => {
     console.error("Çıkış yaparken bir hata oluştu: ", error);
   });
+  localStorage.clear();
 });
 
 const authSlice = createSlice({
@@ -85,6 +86,7 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
         state.user = null;
         state.role = null;
+        console.log(state.isLoading, state.user, state.role);
       })
       .addCase(logout.rejected, (_, action) => {
         console.error("logout failed", action.error.message);

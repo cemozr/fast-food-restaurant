@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import Button from "../UI/Button";
 import img from "../../assets/about-img.png";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../states/store";
+import { logout } from "../../states/authSlice";
 
 export default function Error404() {
   const navigate = useNavigate();
-
+  const dispatch: AppDispatch = useDispatch();
   return (
     <div className="flex w-full flex-grow items-center justify-center gap-10 bg-primary">
       <div>
@@ -18,6 +21,9 @@ export default function Error404() {
           }}
         >
           Ana Sayfaya Dön
+        </Button>
+        <Button el="button" onClick={() => dispatch(logout())}>
+          x
         </Button>
       </div>
       <div className="flex items-center">
